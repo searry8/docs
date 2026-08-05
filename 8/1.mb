@@ -1,1 +1,21 @@
+[meta]
+title=Titre de l'article
+author=Nom
+date=2026-08-05
 
+[block]
+Introduction
+Voici une *introduction* simple.
+Tu peux mettre du **texte important** ou même du `code`.
+
+[block]
+Partie 1
+Tu écris normalement.
+*Italique*, **gras**, `code`.
+
+[block]
+Conclusion
+Fin de l'article.
+
+[link]
+Nom du lien|https://example.com
