@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Articles - GitHub Style</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1>📘 Mon Repo Docs</h1>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Articles</h3>
+    <ul>
+      <li onclick="loadArticle('article1')">README</li>
+      <li onclick="loadArticle('article2')">Installation</li>
+      <li onclick="loadArticle('article3')">Utilisation</li>
+    </ul>
+  </aside>
+
+  <main class="content" id="content">
+    <h2>Bienvenue</h2>
+    <p>Sélectionne un article à gauche.</p>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
