@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles</title>
+<link rel="icon" type="image/png" href="https://searry8.github.io/docs/gitocs.png">
+<style>
+  :root{
+    --paper:#f6f4ef;
+    --paper-raised:#ffffff;
+    --ink:#1e2422;
+    --ink-soft:#5b6460;
+    --accent:#2f5d55;
+    --accent-soft:#dfe9e6;
+    --line:#d8d4c8;
+    --code-bg:#eceae2;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: "Georgia", "Iowan Old Style", serif;
+    line-height:1.6;
+  }
+  header.site{
+    padding:2.5rem 1.5rem 1.5rem;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  header.site h1{
+    font-size:2rem;
+    letter-spacing:0.02em;
+    margin:0;
+    font-weight:600;
+  }
+  header.site p{
+    color:var(--ink-soft);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    margin:0.5rem 0 0;
+  }
+  main{
+    max-width:720px;
+    margin:0 auto;
+    padding:2rem 1.5rem 4rem;
+  }
+  /* -------- LISTE -------- */
+  #status{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    color:var(--ink-soft);
+    font-size:0.9rem;
+    text-align:center;
+    padding:2rem 0;
+  }
+  .article-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .article-list li{
+    border-bottom:1px solid var(--line);
+  }
+  .article-list a{
+    display:block;
+    padding:1.4rem 0.25rem;
+    text-decoration:none;
+    color:inherit;
+  }
+  .article-list a:hover .a-title{
+    color:var(--accent);
+  }
+  .a-title{
+    font-size:1.3rem;
+    font-weight:600;
+    transition:color .15s ease;
+  }
+  .a-meta{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-top:0.35rem;
+  }
+  /* -------- ARTICLE -------- */
+  .back-link{
+    display:inline-block;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    text-decoration:none;
+    margin-bottom:1.5rem;
+  }
+  .back-link:hover{ text-decoration:underline; }
+  .article-header{
+    margin-bottom:2rem;
+    padding-bottom:1.2rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .article-header h1{
+    font-size:2.1rem;
+    margin:0 0 0.6rem;
+    line-height:1.2;
+  }
+  .article-header .a-meta{
+    font-size:0.8rem;
+  }
+  .block{
+    margin-bottom:2.2rem;
+  }
+  .block h2{
+    font-size:1.15rem;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--accent);
+    border-left:3px solid var(--accent);
+    padding-left:0.6rem;
+    margin:0 0 0.9rem;
+  }
+  .block p{
+    margin:0 0 1rem;
+    font-size:1.05rem;
+  }
+  code{
+    background:var(--code-bg);
+    padding:0.1rem 0.35rem;
+    border-radius:3px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:0.9em;
+  }
+  .links{
+    margin-top:2.5rem;
+    padding-top:1.2rem;
+    border-top:1px solid var(--line);
+  }
+  .links h3{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-soft);
+    margin:0 0 0.7rem;
+  }
+  .links ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .links li{
+    margin-bottom:0.4rem;
+  }
+  .links a{
+    color:var(--accent);
+    text-decoration:none;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.95rem;
+  }
+  .links a:hover{ text-decoration:underline; }
+  .error-box{
+    text-align:center;
+    color:var(--ink-soft);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    padding:3rem 1rem;
+  }
+  footer.site{
+    text-align:center;
+    padding:2rem 1.5rem 3rem;
+  }
+  footer.site a{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  footer.site a:hover{
+    color:var(--accent);
+    text-decoration:underline;
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <h1>Articles</h1>
+  <p id="subtitle">Chargement…</p>
+</header>
+
+<main id="app">
+  <div id="status">Chargement des articles…</div>
+</main>
+
+<footer class="site">
+  <a href="https://searry8.github.io/docs/Copyright.md" target="_blank" rel="noopener">© Copyright</a>
+</footer>
+
+<script>
+const BASE_URL = "https://searry8.github.io/docs/8/";
+
+// ----- Cache des articles déjà chargés -----
+const articlesCache = {}; // { n: rawText }
+let articlesList = [];    // [{n, title, author, date}]
+
+// ----- Parsing du format .mb -----
+function parseArticle(raw){
+  const lines = raw.split(/\r?\n/);
+  const article = { meta:{}, blocks:[], links:[] };
+  let mode = null;
+  let currentBlock = null;
+
+  for(const line of lines){
+    const trimmed = line.trim();
+
+    if(trimmed === "[meta]"){ mode = "meta"; continue; }
+    if(trimmed === "[block]"){
+      mode = "block";
+      currentBlock = { title:null, lines:[] };
+      article.blocks.push(currentBlock);
+      continue;
+    }
+    if(trimmed === "[link]"){ mode = "link"; continue; }
+
+    if(mode === "meta"){
+      const idx = line.indexOf("=");
+      if(idx > -1){
+        const key = line.slice(0, idx).trim();
+        const val = line.slice(idx+1).trim();
+        article.meta[key] = val;
+      }
+    } else if(mode === "block"){
+      if(currentBlock.title === null){
+        if(trimmed !== ""){
+          currentBlock.title = trimmed;
+        }
+      } else {
+        currentBlock.lines.push(line);
+      }
+    } else if(mode === "link"){
+      if(trimmed === "") continue;
+      const idx = trimmed.indexOf("|");
+      if(idx > -1){
+        article.links.push({
+          name: trimmed.slice(0, idx).trim(),
+          url: trimmed.slice(idx+1).trim()
+        });
+      }
+    }
+  }
+
+  return article;
+}
+
+// ----- Syntaxe inline: **gras**, *italique*, `code` -----
+function escapeHtml(str){
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function renderInline(text){
+  let escaped = escapeHtml(text);
+  // code en premier pour ne pas toucher son contenu
+  escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
+  // gras avant italique (** avant *)
+  escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  return escaped;
+}
+
+function renderBlockLines(lines){
+  // chaque ligne non vide = un paragraphe
+  return lines
+    .filter(l => l.trim() !== "")
+    .map(l => `<p>${renderInline(l.trim())}</p>`)
+    .join("");
+}
+
+// ----- Récupération séquentielle des articles -----
+async function fetchArticle(n){
+  if(articlesCache[n] !== undefined) return articlesCache[n];
+  const res = await fetch(`${BASE_URL}${n}.mb`, { cache: "no-store" });
+  if(!res.ok) throw new Error("not found");
+  const text = await res.text();
+  articlesCache[n] = text;
+  return text;
+}
+
+async function loadArticleList(){
+  const statusEl = document.getElementById("status");
+  let n = 1;
+  const list = [];
+
+  while(true){
+    try{
+      statusEl.textContent = `Chargement des articles… (${n})`;
+      const raw = await fetchArticle(n);
+      const parsed = parseArticle(raw);
+      list.push({
+        n,
+        title: parsed.meta.title || `Article ${n}`,
+        author: parsed.meta.author || "",
+        date: parsed.meta.date || ""
+      });
+      n++;
+    } catch(e){
+      break; // premier trou = on arrête
+    }
+  }
+
+  articlesList = list;
+  return list;
+}
+
+// ----- Rendu -----
+function renderList(){
+  const app = document.getElementById("app");
+  document.getElementById("subtitle").textContent =
+    articlesList.length + (articlesList.length > 1 ? " articles" : " article");
+
+  if(articlesList.length === 0){
+    app.innerHTML = `<div class="error-box">Aucun article trouvé.</div>`;
+    return;
+  }
+
+  const items = articlesList.map(a => `
+    <li>
+      <a href="#article-${a.n}">
+        <div class="a-title">${escapeHtml(a.title)}</div>
+        <div class="a-meta">${[a.author, a.date].filter(Boolean).map(escapeHtml).join(" · ")}</div>
+      </a>
+    </li>
+  `).join("");
+
+  app.innerHTML = `<ul class="article-list">${items}</ul>`;
+}
+
+async function renderArticle(n){
+  const app = document.getElementById("app");
+  app.innerHTML = `<div id="status">Chargement…</div>`;
+
+  let raw;
+  try{
+    raw = await fetchArticle(n);
+  } catch(e){
+    app.innerHTML = `
+      <a class="back-link" href="#">&larr; Retour aux articles</a>
+      <div class="error-box">Cet article est introuvable.</div>
+    `;
+    return;
+  }
+
+  const parsed = parseArticle(raw);
+  document.getElementById("subtitle").textContent = parsed.meta.title || `Article ${n}`;
+
+  const blocksHtml = parsed.blocks.map(b => `
+    <div class="block">
+      ${b.title ? `<h2>${escapeHtml(b.title)}</h2>` : ""}
+      ${renderBlockLines(b.lines)}
+    </div>
+  `).join("");
+
+  const linksHtml = parsed.links.length ? `
+    <div class="links">
+      <h3>Liens</h3>
+      <ul>
+        ${parsed.links.map(l => `<li><a href="${escapeHtml(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a></li>`).join("")}
+      </ul>
+    </div>
+  ` : "";
+
+  app.innerHTML = `
+    <a class="back-link" href="#">&larr; Retour aux articles</a>
+    <div class="article-header">
+      <h1>${escapeHtml(parsed.meta.title || `Article ${n}`)}</h1>
+      <div class="a-meta">${[parsed.meta.author, parsed.meta.date].filter(Boolean).map(escapeHtml).join(" · ")}</div>
+    </div>
+    ${blocksHtml}
+    ${linksHtml}
+  `;
+}
+
+// ----- Routage simple via hash -----
+function route(){
+  const hash = window.location.hash;
+  const match = hash.match(/^#article-(\d+)$/);
+  if(match){
+    renderArticle(parseInt(match[1], 10));
+  } else {
+    renderList();
+  }
+}
+
+window.addEventListener("hashchange", route);
+
+// ----- Démarrage -----
+(async function init(){
+  await loadArticleList();
+  route();
+})();
+</script>
+
+</body>
+</html>
