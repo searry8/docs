@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Éditeur d'articles</title>
+<link rel="icon" type="image/png" href="https://searry8.github.io/docs/gitocs.png">
+<style>
+  :root{
+    --paper:#f6f4ef;
+    --paper-raised:#ffffff;
+    --ink:#1e2422;
+    --ink-soft:#5b6460;
+    --accent:#2f5d55;
+    --accent-soft:#dfe9e6;
+    --line:#d8d4c8;
+    --code-bg:#eceae2;
+    --danger:#a3453d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    line-height:1.5;
+  }
+  header.site{
+    padding:1.6rem 1.5rem;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+  }
+  header.site h1{
+    font-family: "Georgia", serif;
+    font-size:1.6rem;
+    margin:0;
+    font-weight:600;
+  }
+  header.site p{
+    color:var(--ink-soft);
+    font-size:0.8rem;
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    margin:0.4rem 0 0;
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    min-height:calc(100vh - 90px);
+  }
+  @media (max-width: 900px){
+    .layout{ grid-template-columns:1fr; }
+  }
+
+  .editor-pane{
+    padding:2rem 1.75rem 4rem;
+    border-right:1px solid var(--line);
+    max-width:640px;
+    margin:0 auto;
+    width:100%;
+  }
+  .preview-pane{
+    background:var(--paper-raised);
+    padding:2rem 1.75rem 4rem;
+  }
+  .preview-inner{
+    max-width:640px;
+    margin:0 auto;
+    font-family:"Georgia", serif;
+  }
+  .preview-label{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--ink-soft);
+    margin-bottom:1.2rem;
+  }
+
+  fieldset{
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:1.1rem 1.2rem 1.3rem;
+    margin:0 0 1.6rem;
+  }
+  legend{
+    font-size:0.75rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-soft);
+    padding:0 0.4rem;
+  }
+  label{
+    display:block;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    margin:0.9rem 0 0.3rem;
+  }
+  label:first-child{ margin-top:0; }
+  input[type=text], textarea{
+    width:100%;
+    font-family:"Georgia", serif;
+    font-size:0.98rem;
+    padding:0.55rem 0.7rem;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--paper-raised);
+    color:var(--ink);
+    resize:vertical;
+  }
+  input[type=text]:focus, textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  textarea{ min-height:110px; }
+
+  .block-item, .link-item{
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:0.9rem 1rem 1rem;
+    margin-bottom:1rem;
+    background:var(--paper-raised);
+    position:relative;
+  }
+  .item-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .item-num{
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .link-row{
+    display:flex;
+    gap:0.6rem;
+  }
+  .link-row > div{ flex:1; }
+
+  button{
+    font-family: inherit;
+    cursor:pointer;
+    border:none;
+    border-radius:5px;
+    font-size:0.82rem;
+    letter-spacing:0.04em;
+  }
+  .btn-add{
+    background:var(--accent-soft);
+    color:var(--accent);
+    padding:0.55rem 1rem;
+    font-weight:600;
+    width:100%;
+    margin-top:0.3rem;
+  }
+  .btn-add:hover{ background:#cfe0dc; }
+  .btn-remove{
+    background:transparent;
+    color:var(--danger);
+    padding:0.25rem 0.5rem;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+  }
+  .btn-remove:hover{ text-decoration:underline; }
+
+  .actions{
+    display:flex;
+    gap:0.7rem;
+    margin-top:2rem;
+    flex-wrap:wrap;
+  }
+  .btn-main{
+    background:var(--ink);
+    color:var(--paper);
+    padding:0.75rem 1.3rem;
+    font-weight:600;
+  }
+  .btn-main:hover{ background:#333c39; }
+  .btn-secondary{
+    background:var(--paper-raised);
+    border:1px solid var(--line) !important;
+    color:var(--ink);
+    padding:0.75rem 1.3rem;
+  }
+  .btn-secondary:hover{ border-color:var(--accent) !important; color:var(--accent); }
+
+  .filename-row{
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    margin-top:1.2rem;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+  }
+  .filename-row input{
+    width:90px;
+  }
+
+  .copy-msg{
+    font-size:0.78rem;
+    color:var(--accent);
+    margin-left:0.4rem;
+    opacity:0;
+    transition:opacity .2s ease;
+  }
+  .copy-msg.show{ opacity:1; }
+
+  /* ---- Preview article styling (matches reader) ---- */
+  .p-header{
+    margin-bottom:1.8rem;
+    padding-bottom:1rem;
+    border-bottom:2px solid var(--ink);
+  }
+  .p-header h1{
+    font-size:1.7rem;
+    margin:0 0 0.5rem;
+    line-height:1.2;
+  }
+  .p-meta{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.75rem;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .p-block{ margin-bottom:1.8rem; }
+  .p-block h2{
+    font-size:1.05rem;
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--accent);
+    border-left:3px solid var(--accent);
+    padding-left:0.55rem;
+    margin:0 0 0.8rem;
+  }
+  .p-block p{ margin:0 0 0.9rem; font-size:1rem; }
+  .p-links{
+    margin-top:2rem;
+    padding-top:1rem;
+    border-top:1px solid var(--line);
+  }
+  .p-links h3{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-soft);
+    margin:0 0 0.6rem;
+  }
+  .p-links ul{ list-style:none; margin:0; padding:0; }
+  .p-links li{ margin-bottom:0.35rem; }
+  .p-links a{ color:var(--accent); text-decoration:none; font-family:"Helvetica Neue", Arial, sans-serif; font-size:0.9rem; }
+  code{
+    background:var(--code-bg);
+    padding:0.1rem 0.35rem;
+    border-radius:3px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:0.9em;
+  }
+
+  .raw-toggle{
+    margin-top:2rem;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-decoration:underline;
+  }
+  pre.raw{
+    background:var(--code-bg);
+    padding:1rem;
+    border-radius:6px;
+    font-family:"SFMono-Regular", Consolas, monospace;
+    font-size:0.82rem;
+    white-space:pre-wrap;
+    word-break:break-word;
+    display:none;
+    margin-top:0.8rem;
+  }
+  pre.raw.show{ display:block; }
+
+  footer.site{
+    text-align:center;
+    padding:1.6rem 1.5rem 2.5rem;
+  }
+  footer.site a{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.75rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    text-decoration:none;
+  }
+  footer.site a:hover{ color:var(--accent); text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <h1>Éditeur d'articles</h1>
+  <p>Format .mb</p>
+</header>
+
+<div class="layout">
+  <div class="editor-pane">
+
+    <fieldset>
+      <legend>Meta</legend>
+      <label for="f-title">Titre</label>
+      <input type="text" id="f-title" placeholder="Titre de l'article">
+      <label for="f-author">Auteur</label>
+      <input type="text" id="f-author" placeholder="Nom">
+      <label for="f-date">Date</label>
+      <input type="text" id="f-date" placeholder="2026-08-05">
+    </fieldset>
+
+    <fieldset>
+      <legend>Blocs</legend>
+      <div id="blocks-container"></div>
+      <button type="button" class="btn-add" id="add-block">+ Ajouter un bloc</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Liens</legend>
+      <div id="links-container"></div>
+      <button type="button" class="btn-add" id="add-link">+ Ajouter un lien</button>
+    </fieldset>
+
+    <div class="filename-row">
+      Nom du fichier :
+      <input type="text" id="f-filename" value="1">
+      <span>.mb</span>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-main" id="btn-download">Télécharger le .mb</button>
+      <button type="button" class="btn-secondary" id="btn-copy">Copier le texte<span class="copy-msg" id="copy-msg">Copié !</span></button>
+    </div>
+  </div>
+
+  <div class="preview-pane">
+    <div class="preview-inner">
+      <div class="preview-label">Aperçu</div>
+      <div id="preview"></div>
+      <div class="raw-toggle" id="raw-toggle">Afficher / masquer le code .mb brut</div>
+      <pre class="raw" id="raw-output"></pre>
+    </div>
+  </div>
+</div>
+
+<footer class="site">
+  <a href="https://searry8.github.io/docs/Copyright.md" target="_blank" rel="noopener">© Copyright</a>
+</footer>
+
+<script>
+let blockCount = 0;
+let linkCount = 0;
+
+const blocksContainer = document.getElementById("blocks-container");
+const linksContainer = document.getElementById("links-container");
+
+function addBlock(titleVal = "", contentVal = ""){
+  blockCount++;
+  const id = blockCount;
+  const div = document.createElement("div");
+  div.className = "block-item";
+  div.dataset.id = id;
+  div.innerHTML = `
+    <div class="item-head">
+      <span class="item-num">Bloc</span>
+      <button type="button" class="btn-remove" data-remove-block="${id}">Supprimer</button>
+    </div>
+    <label>Titre du bloc</label>
+    <input type="text" class="block-title" value="${escapeAttr(titleVal)}" placeholder="Introduction">
+    <label>Contenu</label>
+    <textarea class="block-content" placeholder="Voici une introduction simple.&#10;Tu peux mettre du texte *important* ou même du \`code\`.">${escapeHtmlText(contentVal)}</textarea>
+  `;
+  blocksContainer.appendChild(div);
+  div.querySelector(".block-title").addEventListener("input", updatePreview);
+  div.querySelector(".block-content").addEventListener("input", updatePreview);
+  div.querySelector("[data-remove-block]").addEventListener("click", () => {
+    div.remove();
+    updatePreview();
+  });
+  updatePreview();
+}
+
+function addLink(nameVal = "", urlVal = ""){
+  linkCount++;
+  const id = linkCount;
+  const div = document.createElement("div");
+  div.className = "link-item";
+  div.dataset.id = id;
+  div.innerHTML = `
+    <div class="item-head">
+      <span class="item-num">Lien</span>
+      <button type="button" class="btn-remove" data-remove-link="${id}">Supprimer</button>
+    </div>
+    <div class="link-row">
+      <div>
+        <label>Nom</label>
+        <input type="text" class="link-name" value="${escapeAttr(nameVal)}" placeholder="Nom du lien">
+      </div>
+      <div>
+        <label>URL</label>
+        <input type="text" class="link-url" value="${escapeAttr(urlVal)}" placeholder="https://example.com">
+      </div>
+    </div>
+  `;
+  linksContainer.appendChild(div);
+  div.querySelector(".link-name").addEventListener("input", updatePreview);
+  div.querySelector(".link-url").addEventListener("input", updatePreview);
+  div.querySelector("[data-remove-link]").addEventListener("click", () => {
+    div.remove();
+    updatePreview();
+  });
+  updatePreview();
+}
+
+function escapeAttr(str){
+  return str.replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+}
+function escapeHtmlText(str){
+  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+document.getElementById("add-block").addEventListener("click", () => addBlock());
+document.getElementById("add-link").addEventListener("click", () => addLink());
+
+["f-title","f-author","f-date"].forEach(id => {
+  document.getElementById(id).addEventListener("input", updatePreview);
+});
+
+// ---- Génération du texte .mb à partir du formulaire ----
+function generateMb(){
+  const title = document.getElementById("f-title").value.trim();
+  const author = document.getElementById("f-author").value.trim();
+  const date = document.getElementById("f-date").value.trim();
+
+  let out = "[meta]\n";
+  out += `title=${title}\n`;
+  out += `author=${author}\n`;
+  out += `date=${date}\n`;
+
+  document.querySelectorAll(".block-item").forEach(el => {
+    const t = el.querySelector(".block-title").value.trim();
+    const c = el.querySelector(".block-content").value;
+    out += "[block]\n";
+    out += `${t}\n`;
+    out += `${c}\n`;
+  });
+
+  const links = document.querySelectorAll(".link-item");
+  if(links.length){
+    out += "[link]\n";
+    links.forEach(el => {
+      const n = el.querySelector(".link-name").value.trim();
+      const u = el.querySelector(".link-url").value.trim();
+      if(n || u) out += `${n}|${u}\n`;
+    });
+  }
+
+  return out.trim() + "\n";
+}
+
+// ---- Parsing + rendu identique au lecteur ----
+function parseArticle(raw){
+  const lines = raw.split(/\r?\n/);
+  const article = { meta:{}, blocks:[], links:[] };
+  let mode = null;
+  let currentBlock = null;
+
+  for(const line of lines){
+    const trimmed = line.trim();
+    if(trimmed === "[meta]"){ mode = "meta"; continue; }
+    if(trimmed === "[block]"){
+      mode = "block";
+      currentBlock = { title:null, lines:[] };
+      article.blocks.push(currentBlock);
+      continue;
+    }
+    if(trimmed === "[link]"){ mode = "link"; continue; }
+
+    if(mode === "meta"){
+      const idx = line.indexOf("=");
+      if(idx > -1){
+        article.meta[line.slice(0, idx).trim()] = line.slice(idx+1).trim();
+      }
+    } else if(mode === "block"){
+      if(currentBlock.title === null){
+        if(trimmed !== ""){ currentBlock.title = trimmed; }
+      } else {
+        currentBlock.lines.push(line);
+      }
+    } else if(mode === "link"){
+      if(trimmed === "") continue;
+      const idx = trimmed.indexOf("|");
+      if(idx > -1){
+        article.links.push({ name: trimmed.slice(0, idx).trim(), url: trimmed.slice(idx+1).trim() });
+      }
+    }
+  }
+  return article;
+}
+
+function renderInline(text){
+  let escaped = escapeHtmlText(text);
+  escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
+  escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  return escaped;
+}
+
+function renderBlockLines(lines){
+  return lines
+    .filter(l => l.trim() !== "")
+    .map(l => `<p>${renderInline(l.trim())}</p>`)
+    .join("");
+}
+
+function renderPreview(parsed){
+  const blocksHtml = parsed.blocks.map(b => `
+    <div class="p-block">
+      ${b.title ? `<h2>${escapeHtmlText(b.title)}</h2>` : ""}
+      ${renderBlockLines(b.lines)}
+    </div>
+  `).join("");
+
+  const linksHtml = parsed.links.length ? `
+    <div class="p-links">
+      <h3>Liens</h3>
+      <ul>
+        ${parsed.links.map(l => `<li><a href="${escapeHtmlText(l.url)}" target="_blank" rel="noopener">${escapeHtmlText(l.name)}</a></li>`).join("")}
+      </ul>
+    </div>
+  ` : "";
+
+  return `
+    <div class="p-header">
+      <h1>${escapeHtmlText(parsed.meta.title || "Titre de l'article")}</h1>
+      <div class="p-meta">${[parsed.meta.author, parsed.meta.date].filter(Boolean).map(escapeHtmlText).join(" · ")}</div>
+    </div>
+    ${blocksHtml}
+    ${linksHtml}
+  `;
+}
+
+function updatePreview(){
+  const raw = generateMb();
+  const parsed = parseArticle(raw);
+  document.getElementById("preview").innerHTML = renderPreview(parsed);
+  document.getElementById("raw-output").textContent = raw;
+}
+
+document.getElementById("raw-toggle").addEventListener("click", () => {
+  document.getElementById("raw-output").classList.toggle("show");
+});
+
+document.getElementById("btn-download").addEventListener("click", () => {
+  const raw = generateMb();
+  const filename = (document.getElementById("f-filename").value.trim() || "1") + ".mb";
+  const blob = new Blob([raw], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById("btn-copy").addEventListener("click", async () => {
+  const raw = generateMb();
+  try{
+    await navigator.clipboard.writeText(raw);
+  } catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = raw;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+  const msg = document.getElementById("copy-msg");
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 1500);
+});
+
+// ---- Initialisation avec un exemple ----
+document.getElementById("f-title").value = "Titre de l'article";
+document.getElementById("f-author").value = "Nom";
+document.getElementById("f-date").value = "2026-08-05";
+addBlock("Introduction", "Voici une introduction simple.\nTu peux mettre du texte *important* ou même du `code`.");
+addBlock("Partie 1", "Tu écris normalement.\n*Italique*, **gras**, `code`.");
+addBlock("Conclusion", "Fin de l'article.");
+addLink("Nom du lien", "https://example.com");
+</script>
+
+</body>
+</html>
