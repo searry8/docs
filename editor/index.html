@@ -11,11 +11,13 @@
     --paper-raised:#ffffff;
     --ink:#1e2422;
     --ink-soft:#5b6460;
+    --ink-faint:#8b9490;
     --accent:#2f5d55;
     --accent-soft:#dfe9e6;
     --line:#d8d4c8;
     --code-bg:#eceae2;
     --danger:#a3453d;
+    --danger-soft:#f3e4e2;
   }
   *{box-sizing:border-box;}
   body{
@@ -26,86 +28,142 @@
     line-height:1.5;
   }
   header.site{
-    padding:1.6rem 1.5rem;
+    padding:1.1rem 1.5rem;
     text-align:center;
     border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:0.9rem;
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    z-index:20;
   }
+  header.site img{ width:26px; height:26px; border-radius:5px; }
   header.site h1{
     font-family: "Georgia", serif;
-    font-size:1.6rem;
+    font-size:1.35rem;
     margin:0;
     font-weight:600;
   }
-  header.site p{
-    color:var(--ink-soft);
-    font-size:0.8rem;
+  header.site .status-pill{
+    font-size:0.7rem;
     text-transform:uppercase;
-    letter-spacing:0.14em;
-    margin:0.4rem 0 0;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
+    background:var(--accent-soft);
+    color:var(--accent);
+    padding:0.25rem 0.6rem;
+    border-radius:20px;
   }
 
   .layout{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:0;
-    min-height:calc(100vh - 90px);
+    grid-template-columns:220px 1fr 1fr;
+    min-height:calc(100vh - 66px);
   }
-  @media (max-width: 900px){
+  @media (max-width: 1100px){
+    .layout{ grid-template-columns:1fr 1fr; }
+    .toc-pane{ display:none; }
+  }
+  @media (max-width: 800px){
     .layout{ grid-template-columns:1fr; }
+    .preview-pane{ border-top:1px solid var(--line); }
   }
 
-  .editor-pane{
-    padding:2rem 1.75rem 4rem;
+  /* ---- TOC / sommaire ---- */
+  .toc-pane{
     border-right:1px solid var(--line);
-    max-width:640px;
-    margin:0 auto;
-    width:100%;
+    padding:1.4rem 1rem;
+    position:sticky;
+    top:66px;
+    align-self:start;
+    height:calc(100vh - 66px);
+    overflow-y:auto;
+  }
+  .toc-pane h4{
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
+    margin:0 0 0.8rem;
+  }
+  .toc-list{ list-style:none; margin:0 0 1.5rem; padding:0; }
+  .toc-list li{ margin-bottom:0.35rem; }
+  .toc-list a{
+    display:block;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:0.3rem 0.5rem;
+    border-radius:4px;
+    border-left:2px solid transparent;
+  }
+  .toc-list a:hover{ background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); }
+  .toc-stats{
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    line-height:1.7;
+    border-top:1px solid var(--line);
+    padding-top:1rem;
+  }
+  .toc-stats b{ color:var(--ink); }
+
+  .editor-pane{
+    padding:1.6rem 1.6rem 5rem;
+    border-right:1px solid var(--line);
+    overflow-y:auto;
   }
   .preview-pane{
     background:var(--paper-raised);
-    padding:2rem 1.75rem 4rem;
+    padding:1.6rem 1.6rem 5rem;
+    position:sticky;
+    top:66px;
+    align-self:start;
+    height:calc(100vh - 66px);
+    overflow-y:auto;
   }
-  .preview-inner{
-    max-width:640px;
-    margin:0 auto;
-    font-family:"Georgia", serif;
-  }
+  .preview-inner{ font-family:"Georgia", serif; max-width:640px; }
   .preview-label{
     font-family:"Helvetica Neue", Arial, sans-serif;
-    font-size:0.75rem;
+    font-size:0.72rem;
     text-transform:uppercase;
     letter-spacing:0.12em;
-    color:var(--ink-soft);
-    margin-bottom:1.2rem;
+    color:var(--ink-faint);
+    margin-bottom:1rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
   }
 
   fieldset{
     border:1px solid var(--line);
     border-radius:6px;
     padding:1.1rem 1.2rem 1.3rem;
-    margin:0 0 1.6rem;
+    margin:0 0 1.4rem;
   }
   legend{
-    font-size:0.75rem;
+    font-size:0.72rem;
     text-transform:uppercase;
     letter-spacing:0.1em;
-    color:var(--ink-soft);
+    color:var(--ink-faint);
     padding:0 0.4rem;
   }
   label{
     display:block;
-    font-size:0.78rem;
+    font-size:0.74rem;
     text-transform:uppercase;
     letter-spacing:0.06em;
-    color:var(--ink-soft);
-    margin:0.9rem 0 0.3rem;
+    color:var(--ink-faint);
+    margin:0.85rem 0 0.3rem;
   }
   label:first-child{ margin-top:0; }
   input[type=text], textarea{
     width:100%;
     font-family:"Georgia", serif;
-    font-size:0.98rem;
-    padding:0.55rem 0.7rem;
+    font-size:0.96rem;
+    padding:0.5rem 0.65rem;
     border:1px solid var(--line);
     border-radius:5px;
     background:var(--paper-raised);
@@ -115,42 +173,140 @@
   input[type=text]:focus, textarea:focus{
     outline:none;
     border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
   }
-  textarea{ min-height:110px; }
+
+  /* ---- Zone d'écriture principale : pensée pour écrire, pas pour remplir un formulaire ---- */
+  .block-title{
+    border:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    font-family:"Georgia", serif;
+    font-size:1.3rem;
+    font-weight:700;
+    padding:0.2rem 0.1rem;
+    border-bottom:1px solid transparent !important;
+  }
+  .block-title:focus{
+    border-bottom:1px solid var(--accent) !important;
+  }
+  .block-title::placeholder{ color:var(--ink-faint); font-weight:600; }
+
+  .block-content{
+    border:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    font-family:"Georgia", serif;
+    font-size:1.12rem;
+    line-height:1.85;
+    padding:0.3rem 0.1rem 0.1rem;
+    resize:none;
+    overflow:hidden;
+    min-height:auto;
+  }
+  .block-content::placeholder{ color:var(--ink-faint); font-style:italic; }
+  .block-content::selection{ background:var(--accent-soft); }
 
   .block-item, .link-item{
     border:1px solid var(--line);
-    border-radius:6px;
-    padding:0.9rem 1rem 1rem;
-    margin-bottom:1rem;
+    border-radius:8px;
+    margin-bottom:1.4rem;
     background:var(--paper-raised);
-    position:relative;
+    transition:box-shadow .15s ease, border-color .15s ease;
   }
+  .block-item:hover, .block-item:focus-within{
+    box-shadow:0 2px 10px rgba(30,36,34,0.06);
+  }
+  .block-item.dragging, .link-item.dragging{ opacity:0.4; }
+  .block-item.drag-over{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft); }
+  .block-item-inner{ padding:1.1rem 1.3rem 1.3rem; }
+
   .item-head{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:0.5rem;
+    cursor:grab;
+    opacity:0.35;
+    transition:opacity .15s ease;
   }
+  .block-item:hover .item-head, .block-item:focus-within .item-head{
+    opacity:1;
+  }
+  .item-head-left{ display:flex; align-items:center; gap:0.5rem; min-width:0; flex:1; }
+  .drag-handle{ color:var(--ink-faint); font-size:0.9rem; user-select:none; }
   .item-num{
-    font-size:0.72rem;
-    letter-spacing:0.1em;
+    font-size:0.7rem;
+    letter-spacing:0.08em;
     text-transform:uppercase;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
+  .item-title-preview{
+    font-size:0.85rem;
     color:var(--ink-soft);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
   }
-  .link-row{
-    display:flex;
-    gap:0.6rem;
-  }
-  .link-row > div{ flex:1; }
+  .item-btns{ display:flex; gap:0.15rem; flex-shrink:0; }
 
   button{
     font-family: inherit;
     cursor:pointer;
     border:none;
     border-radius:5px;
-    font-size:0.82rem;
-    letter-spacing:0.04em;
+    background:transparent;
   }
+  .icon-btn{
+    width:26px; height:26px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink-faint);
+    font-size:0.85rem;
+    border-radius:4px;
+  }
+  .icon-btn:hover{ background:var(--accent-soft); color:var(--accent); }
+  .icon-btn.danger:hover{ background:var(--danger-soft); color:var(--danger); }
+
+  .block-body{ margin-top:0.7rem; }
+  .block-body.collapsed{ display:none; }
+
+  .toolbar{
+    display:flex;
+    gap:0.3rem;
+    margin:0.2rem 0 0.5rem;
+    opacity:0.3;
+    transition:opacity .15s ease;
+  }
+  .block-item:hover .toolbar, .block-item:focus-within .toolbar{
+    opacity:1;
+  }
+  .tb-btn{
+    font-family:"Georgia", serif;
+    font-size:0.78rem;
+    padding:0.2rem 0.55rem;
+    border:1px solid var(--line) !important;
+    border-radius:4px;
+    color:var(--ink-soft);
+    background:var(--paper);
+  }
+  .tb-btn:hover{ border-color:var(--accent) !important; color:var(--accent); }
+  .tb-btn.b{ font-weight:700; }
+  .tb-btn.i{ font-style:italic; }
+  .tb-btn.c{ font-family:"SFMono-Regular", Consolas, monospace; }
+
+  .block-meta-line{
+    display:flex;
+    justify-content:flex-end;
+    font-size:0.7rem;
+    color:var(--ink-faint);
+    margin-top:0.3rem;
+    opacity:0.5;
+  }
+
+  .link-row{ display:flex; gap:0.6rem; margin-top:0.6rem; }
+  .link-row > div{ flex:1; }
+
   .btn-add{
     background:var(--accent-soft);
     color:var(--accent);
@@ -158,53 +314,46 @@
     font-weight:600;
     width:100%;
     margin-top:0.3rem;
+    font-size:0.82rem;
   }
   .btn-add:hover{ background:#cfe0dc; }
-  .btn-remove{
-    background:transparent;
-    color:var(--danger);
-    padding:0.25rem 0.5rem;
-    font-size:0.72rem;
-    text-transform:uppercase;
-    letter-spacing:0.06em;
-  }
-  .btn-remove:hover{ text-decoration:underline; }
 
   .actions{
     display:flex;
-    gap:0.7rem;
-    margin-top:2rem;
+    gap:0.6rem;
+    margin-top:1.6rem;
     flex-wrap:wrap;
   }
   .btn-main{
     background:var(--ink);
     color:var(--paper);
-    padding:0.75rem 1.3rem;
+    padding:0.7rem 1.2rem;
     font-weight:600;
+    font-size:0.85rem;
   }
   .btn-main:hover{ background:#333c39; }
   .btn-secondary{
     background:var(--paper-raised);
     border:1px solid var(--line) !important;
     color:var(--ink);
-    padding:0.75rem 1.3rem;
+    padding:0.7rem 1.2rem;
+    font-size:0.85rem;
   }
   .btn-secondary:hover{ border-color:var(--accent) !important; color:var(--accent); }
+  .btn-secondary.danger:hover{ border-color:var(--danger) !important; color:var(--danger); }
 
   .filename-row{
     display:flex;
     align-items:center;
     gap:0.5rem;
-    margin-top:1.2rem;
+    margin-top:1rem;
     font-size:0.85rem;
     color:var(--ink-soft);
   }
-  .filename-row input{
-    width:90px;
-  }
+  .filename-row input{ width:90px; }
 
   .copy-msg{
-    font-size:0.78rem;
+    font-size:0.76rem;
     color:var(--accent);
     margin-left:0.4rem;
     opacity:0;
@@ -212,104 +361,149 @@
   }
   .copy-msg.show{ opacity:1; }
 
-  /* ---- Preview article styling (matches reader) ---- */
-  .p-header{
-    margin-bottom:1.8rem;
-    padding-bottom:1rem;
-    border-bottom:2px solid var(--ink);
+  details.import-box{
+    border:1px dashed var(--line);
+    border-radius:6px;
+    padding:0.9rem 1.1rem;
+    margin-bottom:1.4rem;
   }
-  .p-header h1{
-    font-size:1.7rem;
-    margin:0 0 0.5rem;
-    line-height:1.2;
+  details.import-box summary{
+    cursor:pointer;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
   }
+  details.import-box .import-body{ margin-top:0.9rem; }
+  .file-drop{
+    border:1.5px dashed var(--line);
+    border-radius:6px;
+    padding:1.1rem;
+    text-align:center;
+    font-size:0.82rem;
+    color:var(--ink-faint);
+    margin-bottom:0.8rem;
+    cursor:pointer;
+  }
+  .file-drop:hover{ border-color:var(--accent); color:var(--accent); }
+  .file-drop.drag-over{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+
+  /* ---- Preview article styling ---- */
+  .p-header{ margin-bottom:1.6rem; padding-bottom:0.9rem; border-bottom:2px solid var(--ink); }
+  .p-header h1{ font-size:1.55rem; margin:0 0 0.4rem; line-height:1.2; }
   .p-meta{
     font-family:"Helvetica Neue", Arial, sans-serif;
-    font-size:0.75rem;
-    color:var(--ink-soft);
-    text-transform:uppercase;
-    letter-spacing:0.08em;
+    font-size:0.72rem; color:var(--ink-soft);
+    text-transform:uppercase; letter-spacing:0.08em;
   }
-  .p-block{ margin-bottom:1.8rem; }
+  .p-block{ margin-bottom:1.6rem; scroll-margin-top:80px; }
   .p-block h2{
-    font-size:1.05rem;
+    font-size:1rem;
     font-family:"Helvetica Neue", Arial, sans-serif;
-    text-transform:uppercase;
-    letter-spacing:0.08em;
+    text-transform:uppercase; letter-spacing:0.08em;
     color:var(--accent);
     border-left:3px solid var(--accent);
-    padding-left:0.55rem;
-    margin:0 0 0.8rem;
+    padding-left:0.5rem;
+    margin:0 0 0.7rem;
   }
-  .p-block p{ margin:0 0 0.9rem; font-size:1rem; }
-  .p-links{
-    margin-top:2rem;
-    padding-top:1rem;
-    border-top:1px solid var(--line);
-  }
+  .p-block p{ margin:0 0 0.85rem; font-size:0.98rem; }
+  .p-links{ margin-top:1.8rem; padding-top:0.9rem; border-top:1px solid var(--line); }
   .p-links h3{
     font-family:"Helvetica Neue", Arial, sans-serif;
-    font-size:0.72rem;
-    text-transform:uppercase;
-    letter-spacing:0.1em;
-    color:var(--ink-soft);
-    margin:0 0 0.6rem;
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--ink-soft); margin:0 0 0.55rem;
   }
   .p-links ul{ list-style:none; margin:0; padding:0; }
-  .p-links li{ margin-bottom:0.35rem; }
-  .p-links a{ color:var(--accent); text-decoration:none; font-family:"Helvetica Neue", Arial, sans-serif; font-size:0.9rem; }
+  .p-links li{ margin-bottom:0.3rem; }
+  .p-links a{ color:var(--accent); text-decoration:none; font-family:"Helvetica Neue", Arial, sans-serif; font-size:0.88rem; }
   code{
     background:var(--code-bg);
     padding:0.1rem 0.35rem;
     border-radius:3px;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size:0.9em;
+    font-size:0.87em;
   }
+  .empty-hint{ color:var(--ink-faint); font-size:0.85rem; font-style:italic; }
 
   .raw-toggle{
-    margin-top:2rem;
-    font-size:0.78rem;
+    margin-top:1.6rem;
+    font-size:0.76rem;
     color:var(--ink-soft);
     cursor:pointer;
     text-decoration:underline;
+    display:inline-block;
   }
   pre.raw{
     background:var(--code-bg);
-    padding:1rem;
+    padding:0.9rem;
     border-radius:6px;
     font-family:"SFMono-Regular", Consolas, monospace;
-    font-size:0.82rem;
+    font-size:0.8rem;
     white-space:pre-wrap;
     word-break:break-word;
     display:none;
-    margin-top:0.8rem;
+    margin-top:0.7rem;
   }
   pre.raw.show{ display:block; }
 
-  footer.site{
-    text-align:center;
-    padding:1.6rem 1.5rem 2.5rem;
-  }
+  footer.site{ text-align:center; padding:1.4rem 1.5rem 2.2rem; }
   footer.site a{
     font-family: "Helvetica Neue", Arial, sans-serif;
-    font-size:0.75rem;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--ink-soft);
-    text-decoration:none;
+    font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none;
   }
   footer.site a:hover{ color:var(--accent); text-decoration:underline; }
+
+  .toast{
+    position:fixed;
+    bottom:1.2rem;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink);
+    color:var(--paper);
+    padding:0.6rem 1.1rem;
+    border-radius:6px;
+    font-size:0.82rem;
+    opacity:0;
+    pointer-events:none;
+    transition:all .2s ease;
+    z-index:50;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
 <header class="site">
+  <img src="https://searry8.github.io/docs/gitocs.png" alt="">
   <h1>Éditeur d'articles</h1>
-  <p>Format .mb</p>
+  <span class="status-pill" id="status-pill">brouillon</span>
 </header>
 
 <div class="layout">
+
+  <div class="toc-pane">
+    <h4>Sommaire</h4>
+    <ul class="toc-list" id="toc-list"></ul>
+    <div class="toc-stats" id="toc-stats"></div>
+  </div>
+
   <div class="editor-pane">
+
+    <details class="import-box">
+      <summary>Importer un article existant (.mb)</summary>
+      <div class="import-body">
+        <div class="file-drop" id="file-drop">
+          Glisse un fichier .mb ici, ou clique pour en choisir un
+          <input type="file" id="file-input" accept=".mb,.txt" style="display:none">
+        </div>
+        <label>Ou colle le code .mb directement</label>
+        <textarea id="import-text" placeholder="[meta]&#10;title=...&#10;..." style="min-height:90px;"></textarea>
+        <div class="actions">
+          <button type="button" class="btn-secondary" id="btn-import">Charger dans l'éditeur</button>
+        </div>
+      </div>
+    </details>
 
     <fieldset>
       <legend>Meta</legend>
@@ -342,12 +536,16 @@
     <div class="actions">
       <button type="button" class="btn-main" id="btn-download">Télécharger le .mb</button>
       <button type="button" class="btn-secondary" id="btn-copy">Copier le texte<span class="copy-msg" id="copy-msg">Copié !</span></button>
+      <button type="button" class="btn-secondary danger" id="btn-reset">Réinitialiser</button>
     </div>
   </div>
 
   <div class="preview-pane">
     <div class="preview-inner">
-      <div class="preview-label">Aperçu</div>
+      <div class="preview-label">
+        <span>Aperçu</span>
+        <span id="reading-time"></span>
+      </div>
       <div id="preview"></div>
       <div class="raw-toggle" id="raw-toggle">Afficher / masquer le code .mb brut</div>
       <pre class="raw" id="raw-output"></pre>
@@ -359,118 +557,67 @@
   <a href="https://searry8.github.io/docs/Copyright.md" target="_blank" rel="noopener">© Copyright</a>
 </footer>
 
+<div class="toast" id="toast"></div>
+
 <script>
-let blockCount = 0;
-let linkCount = 0;
+/* =========================================================
+   State
+   ========================================================= */
+let uid = 0;
+const nextId = () => ++uid;
 
-const blocksContainer = document.getElementById("blocks-container");
-const linksContainer = document.getElementById("links-container");
+const state = {
+  meta: { title:"Titre de l'article", author:"Nom", date:"2026-08-05" },
+  blocks: [],
+  links: []
+};
 
-function addBlock(titleVal = "", contentVal = ""){
-  blockCount++;
-  const id = blockCount;
-  const div = document.createElement("div");
-  div.className = "block-item";
-  div.dataset.id = id;
-  div.innerHTML = `
-    <div class="item-head">
-      <span class="item-num">Bloc</span>
-      <button type="button" class="btn-remove" data-remove-block="${id}">Supprimer</button>
-    </div>
-    <label>Titre du bloc</label>
-    <input type="text" class="block-title" value="${escapeAttr(titleVal)}" placeholder="Introduction">
-    <label>Contenu</label>
-    <textarea class="block-content" placeholder="Voici une introduction simple.&#10;Tu peux mettre du texte *important* ou même du \`code\`.">${escapeHtmlText(contentVal)}</textarea>
-  `;
-  blocksContainer.appendChild(div);
-  div.querySelector(".block-title").addEventListener("input", updatePreview);
-  div.querySelector(".block-content").addEventListener("input", updatePreview);
-  div.querySelector("[data-remove-block]").addEventListener("click", () => {
-    div.remove();
-    updatePreview();
-  });
-  updatePreview();
+/* =========================================================
+   Helpers
+   ========================================================= */
+function escapeAttr(str){ return (str||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;"); }
+function escapeHtmlText(str){ return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove("show"), 1600);
 }
 
-function addLink(nameVal = "", urlVal = ""){
-  linkCount++;
-  const id = linkCount;
-  const div = document.createElement("div");
-  div.className = "link-item";
-  div.dataset.id = id;
-  div.innerHTML = `
-    <div class="item-head">
-      <span class="item-num">Lien</span>
-      <button type="button" class="btn-remove" data-remove-link="${id}">Supprimer</button>
-    </div>
-    <div class="link-row">
-      <div>
-        <label>Nom</label>
-        <input type="text" class="link-name" value="${escapeAttr(nameVal)}" placeholder="Nom du lien">
-      </div>
-      <div>
-        <label>URL</label>
-        <input type="text" class="link-url" value="${escapeAttr(urlVal)}" placeholder="https://example.com">
-      </div>
-    </div>
-  `;
-  linksContainer.appendChild(div);
-  div.querySelector(".link-name").addEventListener("input", updatePreview);
-  div.querySelector(".link-url").addEventListener("input", updatePreview);
-  div.querySelector("[data-remove-link]").addEventListener("click", () => {
-    div.remove();
-    updatePreview();
-  });
-  updatePreview();
+function markDirty(){
+  document.getElementById("status-pill").textContent = "modifié";
 }
 
-function escapeAttr(str){
-  return str.replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-}
-function escapeHtmlText(str){
-  return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-
-document.getElementById("add-block").addEventListener("click", () => addBlock());
-document.getElementById("add-link").addEventListener("click", () => addLink());
-
-["f-title","f-author","f-date"].forEach(id => {
-  document.getElementById(id).addEventListener("input", updatePreview);
-});
-
-// ---- Génération du texte .mb à partir du formulaire ----
+/* =========================================================
+   Génération du texte .mb à partir du state
+   ========================================================= */
 function generateMb(){
-  const title = document.getElementById("f-title").value.trim();
-  const author = document.getElementById("f-author").value.trim();
-  const date = document.getElementById("f-date").value.trim();
-
   let out = "[meta]\n";
-  out += `title=${title}\n`;
-  out += `author=${author}\n`;
-  out += `date=${date}\n`;
+  out += `title=${state.meta.title}\n`;
+  out += `author=${state.meta.author}\n`;
+  out += `date=${state.meta.date}\n`;
 
-  document.querySelectorAll(".block-item").forEach(el => {
-    const t = el.querySelector(".block-title").value.trim();
-    const c = el.querySelector(".block-content").value;
+  state.blocks.forEach(b => {
     out += "[block]\n";
-    out += `${t}\n`;
-    out += `${c}\n`;
+    out += `${b.title}\n`;
+    out += `${b.content}\n`;
   });
 
-  const links = document.querySelectorAll(".link-item");
-  if(links.length){
+  if(state.links.length){
     out += "[link]\n";
-    links.forEach(el => {
-      const n = el.querySelector(".link-name").value.trim();
-      const u = el.querySelector(".link-url").value.trim();
-      if(n || u) out += `${n}|${u}\n`;
+    state.links.forEach(l => {
+      if(l.name || l.url) out += `${l.name}|${l.url}\n`;
     });
   }
 
   return out.trim() + "\n";
 }
 
-// ---- Parsing + rendu identique au lecteur ----
+/* =========================================================
+   Parsing (identique au lecteur)
+   ========================================================= */
 function parseArticle(raw){
   const lines = raw.split(/\r?\n/);
   const article = { meta:{}, blocks:[], links:[] };
@@ -490,9 +637,7 @@ function parseArticle(raw){
 
     if(mode === "meta"){
       const idx = line.indexOf("=");
-      if(idx > -1){
-        article.meta[line.slice(0, idx).trim()] = line.slice(idx+1).trim();
-      }
+      if(idx > -1) article.meta[line.slice(0, idx).trim()] = line.slice(idx+1).trim();
     } else if(mode === "block"){
       if(currentBlock.title === null){
         if(trimmed !== ""){ currentBlock.title = trimmed; }
@@ -502,14 +647,31 @@ function parseArticle(raw){
     } else if(mode === "link"){
       if(trimmed === "") continue;
       const idx = trimmed.indexOf("|");
-      if(idx > -1){
-        article.links.push({ name: trimmed.slice(0, idx).trim(), url: trimmed.slice(idx+1).trim() });
-      }
+      if(idx > -1) article.links.push({ name: trimmed.slice(0, idx).trim(), url: trimmed.slice(idx+1).trim() });
     }
   }
   return article;
 }
 
+function loadParsedIntoState(parsed){
+  state.meta.title = parsed.meta.title || "";
+  state.meta.author = parsed.meta.author || "";
+  state.meta.date = parsed.meta.date || "";
+  state.blocks = parsed.blocks.map(b => ({ id: nextId(), title: b.title || "", content: b.lines.join("\n").replace(/^\n+/,""), collapsed:false }));
+  state.links = parsed.links.map(l => ({ id: nextId(), name: l.name, url: l.url }));
+
+  document.getElementById("f-title").value = state.meta.title;
+  document.getElementById("f-author").value = state.meta.author;
+  document.getElementById("f-date").value = state.meta.date;
+
+  renderBlocks();
+  renderLinks();
+  updatePreview();
+}
+
+/* =========================================================
+   Rendu inline (gras / italique / code)
+   ========================================================= */
 function renderInline(text){
   let escaped = escapeHtmlText(text);
   escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -517,35 +679,340 @@ function renderInline(text){
   escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
   return escaped;
 }
-
-function renderBlockLines(lines){
-  return lines
+function renderBlockLines(content){
+  return content.split(/\r?\n/)
     .filter(l => l.trim() !== "")
     .map(l => `<p>${renderInline(l.trim())}</p>`)
     .join("");
 }
 
-function renderPreview(parsed){
-  const blocksHtml = parsed.blocks.map(b => `
-    <div class="p-block">
-      ${b.title ? `<h2>${escapeHtmlText(b.title)}</h2>` : ""}
-      ${renderBlockLines(b.lines)}
-    </div>
-  `).join("");
+/* =========================================================
+   Rendu des blocs (formulaire)
+   ========================================================= */
+const blocksContainer = document.getElementById("blocks-container");
+const linksContainer = document.getElementById("links-container");
 
-  const linksHtml = parsed.links.length ? `
+function renderBlocks(){
+  blocksContainer.innerHTML = "";
+  state.blocks.forEach((b, idx) => {
+    const div = document.createElement("div");
+    div.className = "block-item";
+    div.draggable = true;
+    div.dataset.id = b.id;
+    div.dataset.type = "block";
+    div.innerHTML = `
+      <div class="block-item-inner">
+        <div class="item-head" data-toggle="${b.id}">
+          <div class="item-head-left">
+            <span class="drag-handle">⋮⋮</span>
+            <span class="item-num">Bloc ${idx+1}</span>
+            <span class="item-title-preview">${escapeHtmlText(b.title || "(sans titre)")}</span>
+          </div>
+          <div class="item-btns">
+            <button type="button" class="icon-btn" title="Monter" data-move-up="${b.id}">↑</button>
+            <button type="button" class="icon-btn" title="Descendre" data-move-down="${b.id}">↓</button>
+            <button type="button" class="icon-btn" title="Dupliquer" data-duplicate="${b.id}">⧉</button>
+            <button type="button" class="icon-btn" title="Replier/déplier" data-collapse="${b.id}">${b.collapsed ? "▸" : "▾"}</button>
+            <button type="button" class="icon-btn danger" title="Supprimer" data-remove-block="${b.id}">✕</button>
+          </div>
+        </div>
+        <div class="block-body ${b.collapsed ? "collapsed" : ""}" id="block-body-${b.id}">
+          <label>Titre du bloc</label>
+          <input type="text" class="block-title" data-field="title" data-id="${b.id}" value="${escapeAttr(b.title)}" placeholder="Introduction">
+          <label>Contenu</label>
+          <div class="toolbar">
+            <button type="button" class="tb-btn b" data-fmt="bold" data-target="${b.id}" title="Gras (Ctrl+B)">G</button>
+            <button type="button" class="tb-btn i" data-fmt="italic" data-target="${b.id}" title="Italique (Ctrl+I)">I</button>
+            <button type="button" class="tb-btn c" data-fmt="code" data-target="${b.id}" title="Code (Ctrl+E)">&lt;/&gt;</button>
+          </div>
+          <textarea class="block-content" data-field="content" data-id="${b.id}" id="block-content-${b.id}" placeholder="Voici une introduction simple.&#10;Tu peux mettre du texte *important* ou même du \`code\`.">${escapeHtmlText(b.content)}</textarea>
+          <div class="block-meta-line">
+            <span id="block-wc-${b.id}"></span>
+          </div>
+        </div>
+      </div>
+    `;
+    blocksContainer.appendChild(div);
+    updateBlockWordCount(b.id);
+  });
+  attachBlockEvents();
+  renderToc();
+}
+
+function updateBlockWordCount(id){
+  const b = state.blocks.find(x => x.id === id);
+  if(!b) return;
+  const words = (b.content.match(/\S+/g) || []).length;
+  const el = document.getElementById(`block-wc-${id}`);
+  if(el) el.textContent = `${words} mot${words>1?"s":""}`;
+}
+
+function attachBlockEvents(){
+  blocksContainer.querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", () => {
+      const id = parseInt(el.dataset.id, 10);
+      const b = state.blocks.find(x => x.id === id);
+      if(!b) return;
+      b[el.dataset.field] = el.value;
+      if(el.dataset.field === "title"){
+        const titlePrev = el.closest(".block-item").querySelector(".item-title-preview");
+        titlePrev.textContent = el.value || "(sans titre)";
+      }
+      if(el.dataset.field === "content") updateBlockWordCount(id);
+      markDirty();
+      updatePreview();
+      renderToc();
+    });
+    if(el.dataset.field === "content"){
+      el.addEventListener("keydown", handleTextareaShortcut);
+    }
+  });
+
+  blocksContainer.querySelectorAll("[data-move-up]").forEach(el => el.addEventListener("click", () => moveBlock(parseInt(el.dataset.moveUp,10), -1)));
+  blocksContainer.querySelectorAll("[data-move-down]").forEach(el => el.addEventListener("click", () => moveBlock(parseInt(el.dataset.moveDown,10), 1)));
+  blocksContainer.querySelectorAll("[data-duplicate]").forEach(el => el.addEventListener("click", () => duplicateBlock(parseInt(el.dataset.duplicate,10))));
+  blocksContainer.querySelectorAll("[data-remove-block]").forEach(el => el.addEventListener("click", () => removeBlock(parseInt(el.dataset.removeBlock,10))));
+  blocksContainer.querySelectorAll("[data-collapse]").forEach(el => el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleCollapse(parseInt(el.dataset.collapse,10));
+  }));
+  blocksContainer.querySelectorAll(".tb-btn").forEach(el => el.addEventListener("click", () => {
+    const id = parseInt(el.dataset.target, 10);
+    applyFormat(id, el.dataset.fmt);
+  }));
+
+  // drag and drop reorder
+  blocksContainer.querySelectorAll(".block-item").forEach(item => {
+    item.addEventListener("dragstart", () => item.classList.add("dragging"));
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+      blocksContainer.querySelectorAll(".block-item").forEach(x => x.classList.remove("drag-over"));
+    });
+    item.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      item.classList.add("drag-over");
+    });
+    item.addEventListener("dragleave", () => item.classList.remove("drag-over"));
+    item.addEventListener("drop", (e) => {
+      e.preventDefault();
+      item.classList.remove("drag-over");
+      const draggingEl = blocksContainer.querySelector(".dragging");
+      if(!draggingEl || draggingEl === item) return;
+      const fromId = parseInt(draggingEl.dataset.id, 10);
+      const toId = parseInt(item.dataset.id, 10);
+      reorderBlocks(fromId, toId);
+    });
+  });
+}
+
+function moveBlock(id, dir){
+  const idx = state.blocks.findIndex(b => b.id === id);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= state.blocks.length) return;
+  const [item] = state.blocks.splice(idx, 1);
+  state.blocks.splice(newIdx, 0, item);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function reorderBlocks(fromId, toId){
+  const fromIdx = state.blocks.findIndex(b => b.id === fromId);
+  const toIdx = state.blocks.findIndex(b => b.id === toId);
+  if(fromIdx === -1 || toIdx === -1) return;
+  const [item] = state.blocks.splice(fromIdx, 1);
+  state.blocks.splice(toIdx, 0, item);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function duplicateBlock(id){
+  const idx = state.blocks.findIndex(b => b.id === id);
+  if(idx === -1) return;
+  const copy = { ...state.blocks[idx], id: nextId() };
+  state.blocks.splice(idx+1, 0, copy);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function removeBlock(id){
+  state.blocks = state.blocks.filter(b => b.id !== id);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function toggleCollapse(id){
+  const b = state.blocks.find(x => x.id === id);
+  if(!b) return;
+  b.collapsed = !b.collapsed;
+  renderBlocks();
+}
+
+function addBlock(title="", content=""){
+  state.blocks.push({ id: nextId(), title, content, collapsed:false });
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+/* ---- Formatage via la barre d'outils / raccourcis ---- */
+function wrapSelection(textarea, prefix, suffix){
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+  const selected = value.slice(start, end) || "texte";
+  const newValue = value.slice(0, start) + prefix + selected + suffix + value.slice(end);
+  textarea.value = newValue;
+  textarea.focus();
+  textarea.selectionStart = start + prefix.length;
+  textarea.selectionEnd = start + prefix.length + selected.length;
+  textarea.dispatchEvent(new Event("input"));
+}
+
+function applyFormat(blockId, fmt){
+  const textarea = document.getElementById(`block-content-${blockId}`);
+  if(!textarea) return;
+  if(fmt === "bold") wrapSelection(textarea, "**", "**");
+  if(fmt === "italic") wrapSelection(textarea, "*", "*");
+  if(fmt === "code") wrapSelection(textarea, "`", "`");
+}
+
+function handleTextareaShortcut(e){
+  const isMod = e.ctrlKey || e.metaKey;
+  if(!isMod) return;
+  const id = parseInt(e.target.dataset.id, 10);
+  if(e.key.toLowerCase() === "b"){ e.preventDefault(); applyFormat(id, "bold"); }
+  if(e.key.toLowerCase() === "i"){ e.preventDefault(); applyFormat(id, "italic"); }
+  if(e.key.toLowerCase() === "e"){ e.preventDefault(); applyFormat(id, "code"); }
+}
+
+/* =========================================================
+   Rendu des liens
+   ========================================================= */
+function renderLinks(){
+  linksContainer.innerHTML = "";
+  state.links.forEach((l, idx) => {
+    const div = document.createElement("div");
+    div.className = "link-item";
+    div.draggable = true;
+    div.dataset.id = l.id;
+    div.innerHTML = `
+      <div class="block-item-inner">
+        <div class="item-head">
+          <div class="item-head-left">
+            <span class="drag-handle">⋮⋮</span>
+            <span class="item-num">Lien ${idx+1}</span>
+          </div>
+          <div class="item-btns">
+            <button type="button" class="icon-btn" title="Monter" data-move-up-link="${l.id}">↑</button>
+            <button type="button" class="icon-btn" title="Descendre" data-move-down-link="${l.id}">↓</button>
+            <button type="button" class="icon-btn danger" title="Supprimer" data-remove-link="${l.id}">✕</button>
+          </div>
+        </div>
+        <div class="link-row">
+          <div>
+            <label>Nom</label>
+            <input type="text" class="link-name" data-field="name" data-id="${l.id}" value="${escapeAttr(l.name)}" placeholder="Nom du lien">
+          </div>
+          <div>
+            <label>URL</label>
+            <input type="text" class="link-url" data-field="url" data-id="${l.id}" value="${escapeAttr(l.url)}" placeholder="https://example.com">
+          </div>
+        </div>
+      </div>
+    `;
+    linksContainer.appendChild(div);
+  });
+  attachLinkEvents();
+}
+
+function attachLinkEvents(){
+  linksContainer.querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", () => {
+      const id = parseInt(el.dataset.id, 10);
+      const l = state.links.find(x => x.id === id);
+      if(!l) return;
+      l[el.dataset.field] = el.value;
+      markDirty();
+      updatePreview();
+    });
+  });
+  linksContainer.querySelectorAll("[data-move-up-link]").forEach(el => el.addEventListener("click", () => moveLink(parseInt(el.dataset.moveUpLink,10), -1)));
+  linksContainer.querySelectorAll("[data-move-down-link]").forEach(el => el.addEventListener("click", () => moveLink(parseInt(el.dataset.moveDownLink,10), 1)));
+  linksContainer.querySelectorAll("[data-remove-link]").forEach(el => el.addEventListener("click", () => removeLink(parseInt(el.dataset.removeLink,10))));
+}
+
+function moveLink(id, dir){
+  const idx = state.links.findIndex(l => l.id === id);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= state.links.length) return;
+  const [item] = state.links.splice(idx, 1);
+  state.links.splice(newIdx, 0, item);
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+function removeLink(id){
+  state.links = state.links.filter(l => l.id !== id);
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+function addLink(name="", url=""){
+  state.links.push({ id: nextId(), name, url });
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+/* =========================================================
+   Sommaire (TOC)
+   ========================================================= */
+function renderToc(){
+  const tocList = document.getElementById("toc-list");
+  tocList.innerHTML = state.blocks.map((b, idx) => `
+    <li><a href="#preview-block-${b.id}">${idx+1}. ${escapeHtmlText(b.title || "(sans titre)")}</a></li>
+  `).join("") || `<li class="empty-hint" style="padding-left:0.5rem;">Aucun bloc</li>`;
+
+  const totalWords = state.blocks.reduce((sum, b) => sum + (b.content.match(/\S+/g) || []).length, 0);
+  const readingMin = Math.max(1, Math.round(totalWords / 200));
+  document.getElementById("toc-stats").innerHTML = `
+    <b>${state.blocks.length}</b> bloc${state.blocks.length>1?"s":""}<br>
+    <b>${state.links.length}</b> lien${state.links.length>1?"s":""}<br>
+    <b>${totalWords}</b> mots · ~${readingMin} min de lecture
+  `;
+  document.getElementById("reading-time").textContent = `~${readingMin} min de lecture`;
+}
+
+/* =========================================================
+   Aperçu
+   ========================================================= */
+function renderPreview(){
+  const blocksHtml = state.blocks.length ? state.blocks.map(b => `
+    <div class="p-block" id="preview-block-${b.id}">
+      ${b.title ? `<h2>${escapeHtmlText(b.title)}</h2>` : ""}
+      ${renderBlockLines(b.content) || `<p class="empty-hint">Bloc vide</p>`}
+    </div>
+  `).join("") : `<p class="empty-hint">Ajoute un bloc pour voir l'aperçu.</p>`;
+
+  const linksHtml = state.links.length ? `
     <div class="p-links">
       <h3>Liens</h3>
       <ul>
-        ${parsed.links.map(l => `<li><a href="${escapeHtmlText(l.url)}" target="_blank" rel="noopener">${escapeHtmlText(l.name)}</a></li>`).join("")}
+        ${state.links.map(l => `<li><a href="${escapeHtmlText(l.url)}" target="_blank" rel="noopener">${escapeHtmlText(l.name || l.url)}</a></li>`).join("")}
       </ul>
     </div>
   ` : "";
 
-  return `
+  document.getElementById("preview").innerHTML = `
     <div class="p-header">
-      <h1>${escapeHtmlText(parsed.meta.title || "Titre de l'article")}</h1>
-      <div class="p-meta">${[parsed.meta.author, parsed.meta.date].filter(Boolean).map(escapeHtmlText).join(" · ")}</div>
+      <h1>${escapeHtmlText(state.meta.title || "Titre de l'article")}</h1>
+      <div class="p-meta">${[state.meta.author, state.meta.date].filter(Boolean).map(escapeHtmlText).join(" · ")}</div>
     </div>
     ${blocksHtml}
     ${linksHtml}
@@ -553,11 +1020,28 @@ function renderPreview(parsed){
 }
 
 function updatePreview(){
-  const raw = generateMb();
-  const parsed = parseArticle(raw);
-  document.getElementById("preview").innerHTML = renderPreview(parsed);
-  document.getElementById("raw-output").textContent = raw;
+  renderPreview();
+  document.getElementById("raw-output").textContent = generateMb();
+  renderToc();
 }
+
+/* =========================================================
+   Meta fields
+   ========================================================= */
+["f-title","f-author","f-date"].forEach(id => {
+  document.getElementById(id).addEventListener("input", (e) => {
+    const key = id.replace("f-", "");
+    state.meta[key] = e.target.value;
+    markDirty();
+    updatePreview();
+  });
+});
+
+/* =========================================================
+   Boutons globaux
+   ========================================================= */
+document.getElementById("add-block").addEventListener("click", () => addBlock());
+document.getElementById("add-link").addEventListener("click", () => addLink());
 
 document.getElementById("raw-toggle").addEventListener("click", () => {
   document.getElementById("raw-output").classList.toggle("show");
@@ -575,6 +1059,8 @@ document.getElementById("btn-download").addEventListener("click", () => {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  document.getElementById("status-pill").textContent = "téléchargé";
+  showToast(`${filename} téléchargé`);
 });
 
 document.getElementById("btn-copy").addEventListener("click", async () => {
@@ -592,16 +1078,71 @@ document.getElementById("btn-copy").addEventListener("click", async () => {
   const msg = document.getElementById("copy-msg");
   msg.classList.add("show");
   setTimeout(() => msg.classList.remove("show"), 1500);
+  showToast("Code .mb copié");
 });
 
-// ---- Initialisation avec un exemple ----
-document.getElementById("f-title").value = "Titre de l'article";
-document.getElementById("f-author").value = "Nom";
-document.getElementById("f-date").value = "2026-08-05";
+document.getElementById("btn-reset").addEventListener("click", () => {
+  if(!confirm("Réinitialiser l'éditeur ? Toutes les modifications non téléchargées seront perdues.")) return;
+  state.meta = { title:"", author:"", date:"" };
+  state.blocks = [];
+  state.links = [];
+  document.getElementById("f-title").value = "";
+  document.getElementById("f-author").value = "";
+  document.getElementById("f-date").value = "";
+  renderBlocks();
+  renderLinks();
+  updatePreview();
+  document.getElementById("status-pill").textContent = "brouillon";
+  showToast("Éditeur réinitialisé");
+});
+
+/* =========================================================
+   Import
+   ========================================================= */
+document.getElementById("btn-import").addEventListener("click", () => {
+  const raw = document.getElementById("import-text").value;
+  if(!raw.trim()){ showToast("Colle du texte .mb avant de charger"); return; }
+  const parsed = parseArticle(raw);
+  loadParsedIntoState(parsed);
+  document.getElementById("status-pill").textContent = "importé";
+  showToast("Article importé dans l'éditeur");
+});
+
+const fileDrop = document.getElementById("file-drop");
+const fileInput = document.getElementById("file-input");
+
+fileDrop.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => {
+  if(fileInput.files[0]) readMbFile(fileInput.files[0]);
+});
+fileDrop.addEventListener("dragover", (e) => { e.preventDefault(); fileDrop.classList.add("drag-over"); });
+fileDrop.addEventListener("dragleave", () => fileDrop.classList.remove("drag-over"));
+fileDrop.addEventListener("drop", (e) => {
+  e.preventDefault();
+  fileDrop.classList.remove("drag-over");
+  if(e.dataTransfer.files[0]) readMbFile(e.dataTransfer.files[0]);
+});
+
+function readMbFile(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    const parsed = parseArticle(reader.result);
+    loadParsedIntoState(parsed);
+    document.getElementById("status-pill").textContent = "importé";
+    showToast(`${file.name} chargé dans l'éditeur`);
+  };
+  reader.readAsText(file);
+}
+
+/* =========================================================
+   Initialisation avec un exemple
+   ========================================================= */
 addBlock("Introduction", "Voici une introduction simple.\nTu peux mettre du texte *important* ou même du `code`.");
 addBlock("Partie 1", "Tu écris normalement.\n*Italique*, **gras**, `code`.");
 addBlock("Conclusion", "Fin de l'article.");
 addLink("Nom du lien", "https://example.com");
+updatePreview();
+document.getElementById("status-pill").textContent = "brouillon";
 </script>
 
 </body>
