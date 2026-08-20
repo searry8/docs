@@ -2,418 +2,1400 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Docs — Documentation du projet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Éditeur d'articles</title>
+<link rel="icon" type="image/png" href="https://searry8.github.io/docs/gitocs.png">
 <style>
   :root{
-    --ink:#171a21;
-    --paper:#faf8f3;
-    --panel:#12141a;
-    --panel-line:#242833;
-    --accent:#e8a33d;
-    --accent-soft:#f6dcae;
-    --text-muted:#7b8290;
-    --code-bg:#eee9dd;
-    --code-border:#ddd5c2;
-    --radius:8px;
+    --paper:#f6f4ef;
+    --paper-raised:#ffffff;
+    --ink:#1e2422;
+    --ink-soft:#5b6460;
+    --ink-faint:#8b9490;
+    --accent:#2f5d55;
+    --accent-soft:#dfe9e6;
+    --line:#d8d4c8;
+    --code-bg:#eceae2;
+    --danger:#a3453d;
+    --danger-soft:#f3e4e2;
   }
   *{box-sizing:border-box;}
-  html,body{height:100%;}
   body{
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:"Inter","Segoe UI",Helvetica,Arial,sans-serif;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    line-height:1.5;
+  }
+  header.site{
+    padding:1.1rem 1.5rem;
+    text-align:center;
+    border-bottom:1px solid var(--line);
     display:flex;
-    min-height:100vh;
-  }
-  h1,h2,h3,.brand{
-    font-family:"Space Grotesk","Inter",sans-serif;
-    letter-spacing:-0.01em;
-  }
-  code, pre, .kbd{
-    font-family:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
-  }
-
-  /* ---------- SIDEBAR ---------- */
-  .sidebar{
-    width:250px;
-    flex-shrink:0;
-    background:var(--panel);
-    color:#e7e8ec;
-    min-height:100vh;
-    padding:22px 16px;
+    align-items:center;
+    justify-content:center;
+    gap:0.9rem;
     position:sticky;
     top:0;
-    align-self:flex-start;
-    border-right:1px solid var(--panel-line);
+    background:var(--paper);
+    z-index:20;
   }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:17px;
+  header.site img{ width:26px; height:26px; border-radius:5px; }
+  header.site h1{
+    font-family: "Georgia", serif;
+    font-size:1.35rem;
+    margin:0;
     font-weight:600;
-    color:#fff;
-    margin:0 4px 22px;
   }
-  .brand .cursor{
-    color:var(--accent);
-    animation:blink 1.1s step-end infinite;
-  }
-  @keyframes blink{ 50%{ opacity:0; } }
-
-  .search{
-    width:100%;
-    background:#1c1f28;
-    border:1px solid var(--panel-line);
-    color:#e7e8ec;
-    padding:8px 10px;
-    border-radius:var(--radius);
-    font-size:13px;
-    margin-bottom:18px;
-    font-family:inherit;
-  }
-  .search::placeholder{ color:var(--text-muted); }
-  .search:focus{ outline:2px solid var(--accent); outline-offset:1px; }
-
-  .section-label{
+  header.site .status-pill{
+    font-size:0.7rem;
     text-transform:uppercase;
-    font-size:11px;
-    letter-spacing:.09em;
-    color:var(--text-muted);
-    margin:18px 8px 6px;
-  }
-
-  .nav-item{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 10px;
-    margin:1px 0;
-    border-radius:var(--radius);
-    cursor:pointer;
-    font-size:14px;
-    color:#c7c9d1;
-    border:1px solid transparent;
-    transition:background .12s ease, color .12s ease;
-  }
-  .nav-item .tag{
-    font-size:10px;
-    color:#6c7280;
-    font-family:"IBM Plex Mono",monospace;
-  }
-  .nav-item:hover{
-    background:#1c1f28;
-    color:#fff;
-  }
-  .nav-item.active{
-    background:#1c1f28;
-    color:#fff;
-    border-color:var(--panel-line);
-    box-shadow:inset 3px 0 0 var(--accent);
-  }
-  .nav-item[hidden]{ display:none; }
-
-  /* ---------- CONTENT ---------- */
-  .content-wrap{
-    flex:1;
-    display:flex;
-    justify-content:center;
-    padding:48px 32px 80px;
-  }
-  .content{
-    width:100%;
-    max-width:680px;
-  }
-  .breadcrumb{
-    font-size:12px;
-    color:var(--text-muted);
-    margin-bottom:10px;
-    font-family:"IBM Plex Mono",monospace;
-  }
-  .breadcrumb .accent{ color:var(--accent); }
-  h1{ font-size:32px; margin:0 0 4px; }
-  .lede{
-    color:var(--text-muted);
-    font-size:16px;
-    margin:0 0 28px;
-  }
-  .content p{
-    font-size:15.5px;
-    line-height:1.7;
-    color:#333844;
-  }
-  .content h2{
-    font-size:19px;
-    margin:30px 0 10px;
-    padding-top:6px;
-  }
-
-  pre{
-    background:var(--code-bg);
-    border:1px solid var(--code-border);
-    border-radius:var(--radius);
-    padding:14px 16px;
-    font-size:13.5px;
-    line-height:1.6;
-    overflow-x:auto;
-    position:relative;
-  }
-  code.inline{
-    background:var(--code-bg);
-    border:1px solid var(--code-border);
-    padding:2px 6px;
-    border-radius:5px;
-    font-size:0.9em;
-  }
-  .copy-btn{
-    position:absolute;
-    top:8px;
-    right:8px;
-    background:var(--panel);
-    color:#e7e8ec;
-    border:none;
-    border-radius:6px;
-    font-size:11px;
-    padding:5px 9px;
-    cursor:pointer;
-    font-family:"Inter",sans-serif;
-    opacity:.85;
-  }
-  .copy-btn:hover{ opacity:1; }
-
-  .callout{
-    display:flex;
-    gap:10px;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
     background:var(--accent-soft);
-    border:1px solid #e3c184;
-    border-radius:var(--radius);
-    padding:12px 14px;
-    font-size:14px;
-    margin:20px 0;
+    color:var(--accent);
+    padding:0.25rem 0.6rem;
+    border-radius:20px;
   }
 
-  .pager{
+  .layout{
+    display:grid;
+    grid-template-columns:220px 1fr 1fr;
+    min-height:calc(100vh - 66px);
+  }
+  @media (max-width: 1100px){
+    .layout{ grid-template-columns:1fr 1fr; }
+    .toc-pane{ display:none; }
+  }
+  @media (max-width: 800px){
+    .layout{ grid-template-columns:1fr; }
+    .preview-pane{ border-top:1px solid var(--line); }
+  }
+
+  /* ---- TOC / sommaire ---- */
+  .toc-pane{
+    border-right:1px solid var(--line);
+    padding:1.4rem 1rem;
+    position:sticky;
+    top:66px;
+    align-self:start;
+    height:calc(100vh - 66px);
+    overflow-y:auto;
+  }
+  .toc-pane h4{
+    font-size:0.7rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
+    margin:0 0 0.8rem;
+  }
+  .toc-list{ list-style:none; margin:0 0 1.5rem; padding:0; }
+  .toc-list li{ margin-bottom:0.35rem; }
+  .toc-list a{
+    display:block;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:0.3rem 0.5rem;
+    border-radius:4px;
+    border-left:2px solid transparent;
+  }
+  .toc-list a:hover{ background:var(--accent-soft); color:var(--accent); border-left-color:var(--accent); }
+  .toc-stats{
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    line-height:1.7;
+    border-top:1px solid var(--line);
+    padding-top:1rem;
+  }
+  .toc-stats b{ color:var(--ink); }
+
+  .editor-pane{
+    padding:1.6rem 1.6rem 5rem;
+    border-right:1px solid var(--line);
+    overflow-y:auto;
+  }
+  .editor-pane > *{
+    max-width:640px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .preview-pane{
+    background:var(--paper-raised);
+    padding:1.6rem 1.6rem 5rem;
+    position:sticky;
+    top:66px;
+    align-self:start;
+    height:calc(100vh - 66px);
+    overflow-y:auto;
+  }
+  .preview-inner{ font-family:"Georgia", serif; max-width:640px; }
+  .preview-label{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--ink-faint);
+    margin-bottom:1rem;
     display:flex;
     justify-content:space-between;
-    margin-top:44px;
-    padding-top:20px;
-    border-top:1px solid #e6e1d4;
+    align-items:center;
   }
-  .pager a{
-    text-decoration:none;
-    color:var(--ink);
-    font-size:13px;
-    border:1px solid #e6e1d4;
-    border-radius:var(--radius);
-    padding:10px 14px;
+
+  fieldset{
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:1.1rem 1.2rem 1.3rem;
+    margin:0 0 1.4rem;
+  }
+  legend{
+    font-size:0.72rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--ink-faint);
+    padding:0 0.4rem;
+  }
+  label{
     display:block;
-    max-width:45%;
+    font-size:0.74rem;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-faint);
+    margin:0.85rem 0 0.3rem;
   }
-  .pager a:hover{ border-color:var(--accent); }
-  .pager .dir{ display:block; color:var(--text-muted); font-size:11px; margin-bottom:2px; }
-  .pager .next{ margin-left:auto; text-align:right; }
+  label:first-child{ margin-top:0; }
+  input[type=text], textarea{
+    width:100%;
+    font-family:"Georgia", serif;
+    font-size:0.96rem;
+    padding:0.5rem 0.65rem;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--paper-raised);
+    color:var(--ink);
+    resize:vertical;
+  }
+  input[type=text]:focus, textarea:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
 
-  .menu-toggle{
+  /* ---- Zone d'écriture principale : pensée pour écrire, pas pour remplir un formulaire ---- */
+  .block-title{
+    border:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    font-family:"Georgia", serif;
+    font-size:1.3rem;
+    font-weight:700;
+    padding:0.2rem 0.1rem;
+    border-bottom:1px solid transparent !important;
+  }
+  .block-title:focus{
+    border-bottom:1px solid var(--accent) !important;
+  }
+  .block-title::placeholder{ color:var(--ink-faint); font-weight:600; }
+
+  .block-content{
+    border:none !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    font-family:"Georgia", serif;
+    font-size:1.12rem;
+    line-height:1.85;
+    padding:0.3rem 0.1rem 0.1rem;
+    resize:none;
+    overflow:hidden;
+    min-height:auto;
+  }
+  .block-content::placeholder{ color:var(--ink-faint); font-style:italic; }
+  .block-content::selection{ background:var(--accent-soft); }
+
+  .block-item, .link-item{
+    border:1px solid var(--line);
+    border-radius:8px;
+    margin-bottom:1.4rem;
+    background:var(--paper-raised);
+    transition:box-shadow .15s ease, border-color .15s ease;
+  }
+  .block-item:hover, .block-item:focus-within{
+    box-shadow:0 2px 10px rgba(30,36,34,0.06);
+  }
+  .block-item.dragging, .link-item.dragging{ opacity:0.4; }
+  .block-item.drag-over{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft); }
+  .block-item-inner{ padding:1.1rem 1.3rem 1.3rem; }
+
+  .item-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:0.5rem;
+    cursor:grab;
+    opacity:0.35;
+    transition:opacity .15s ease;
+  }
+  .block-item:hover .item-head, .block-item:focus-within .item-head{
+    opacity:1;
+  }
+  .item-head-left{ display:flex; align-items:center; gap:0.5rem; min-width:0; flex:1; }
+  .drag-handle{ color:var(--ink-faint); font-size:0.9rem; user-select:none; }
+  .item-num{
+    font-size:0.7rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
+  .item-title-preview{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .item-btns{ display:flex; gap:0.15rem; flex-shrink:0; }
+
+  button{
+    font-family: inherit;
+    cursor:pointer;
+    border:none;
+    border-radius:5px;
+    background:transparent;
+  }
+  .icon-btn{
+    width:26px; height:26px;
+    display:inline-flex; align-items:center; justify-content:center;
+    color:var(--ink-faint);
+    font-size:0.85rem;
+    border-radius:4px;
+  }
+  .icon-btn:hover{ background:var(--accent-soft); color:var(--accent); }
+  .icon-btn.danger:hover{ background:var(--danger-soft); color:var(--danger); }
+
+  .block-body{ margin-top:0.7rem; }
+  .block-body.collapsed{ display:none; }
+
+  .toolbar{
+    display:flex;
+    gap:0.3rem;
+    margin:0.2rem 0 0.5rem;
+    opacity:0.3;
+    transition:opacity .15s ease;
+  }
+  .block-item:hover .toolbar, .block-item:focus-within .toolbar{
+    opacity:1;
+  }
+  .tb-btn{
+    font-family:"Georgia", serif;
+    font-size:0.78rem;
+    padding:0.2rem 0.55rem;
+    border:1px solid var(--line) !important;
+    border-radius:4px;
+    color:var(--ink-soft);
+    background:var(--paper);
+  }
+  .tb-btn:hover{ border-color:var(--accent) !important; color:var(--accent); }
+  .tb-btn.b{ font-weight:700; }
+  .tb-btn.i{ font-style:italic; }
+  .tb-btn.c{ font-family:"SFMono-Regular", Consolas, monospace; }
+
+  .block-meta-line{
+    display:flex;
+    justify-content:flex-end;
+    font-size:0.7rem;
+    color:var(--ink-faint);
+    margin-top:0.3rem;
+    opacity:0.5;
+  }
+
+  .link-row{ display:flex; gap:0.6rem; margin-top:0.6rem; }
+  .link-row > div{ flex:1; }
+
+  .btn-add{
+    background:var(--accent-soft);
+    color:var(--accent);
+    padding:0.55rem 1rem;
+    font-weight:600;
+    width:100%;
+    margin-top:0.3rem;
+    font-size:0.82rem;
+  }
+  .btn-add:hover{ background:#cfe0dc; }
+
+  .actions{
+    display:flex;
+    gap:0.6rem;
+    margin-top:1.6rem;
+    flex-wrap:wrap;
+  }
+  .btn-main{
+    background:var(--ink);
+    color:var(--paper);
+    padding:0.7rem 1.2rem;
+    font-weight:600;
+    font-size:0.85rem;
+  }
+  .btn-main:hover{ background:#333c39; }
+  .btn-secondary{
+    background:var(--paper-raised);
+    border:1px solid var(--line) !important;
+    color:var(--ink);
+    padding:0.7rem 1.2rem;
+    font-size:0.85rem;
+  }
+  .btn-secondary:hover{ border-color:var(--accent) !important; color:var(--accent); }
+  .btn-secondary.danger:hover{ border-color:var(--danger) !important; color:var(--danger); }
+
+  .filename-row{
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    margin-top:1rem;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+  }
+  .filename-row input{ width:90px; }
+
+  .copy-msg{
+    font-size:0.76rem;
+    color:var(--accent);
+    margin-left:0.4rem;
+    opacity:0;
+    transition:opacity .2s ease;
+  }
+  .copy-msg.show{ opacity:1; }
+
+  details.import-box{
+    border:1px dashed var(--line);
+    border-radius:6px;
+    padding:0.9rem 1.1rem;
+    margin-bottom:1.4rem;
+  }
+  details.import-box summary{
+    cursor:pointer;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+  }
+  details.import-box .import-body{ margin-top:0.9rem; }
+  .hint-text{
+    font-size:0.8rem;
+    color:var(--ink-faint);
+    margin:0 0 0.7rem;
+    line-height:1.5;
+  }
+  .hint-text code{ font-size:0.85em; }
+  #draft-hint{ margin-top:0.6rem; text-align:right; }
+
+  .published-list{
+    list-style:none;
+    margin:0.9rem 0 0;
+    padding:0;
+    max-height:260px;
+    overflow-y:auto;
+  }
+  .published-list li{
+    border:1px solid var(--line);
+    border-radius:6px;
+    margin-bottom:0.5rem;
+  }
+  .published-list button{
+    width:100%;
+    text-align:left;
+    padding:0.6rem 0.8rem;
+    background:var(--paper-raised);
+    border-radius:6px;
+  }
+  .published-list button:hover{ background:var(--accent-soft); }
+  .published-list .pub-title{
+    font-family:"Georgia", serif;
+    font-size:0.95rem;
+    color:var(--ink);
+    display:block;
+  }
+  .published-list .pub-meta{
+    font-size:0.72rem;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin-top:0.15rem;
+    display:block;
+  }
+  .published-list .pub-empty{
+    font-size:0.82rem;
+    color:var(--ink-faint);
+    font-style:italic;
+    padding:0.4rem 0;
+  }
+  .file-drop{
+    border:1.5px dashed var(--line);
+    border-radius:6px;
+    padding:1.1rem;
+    text-align:center;
+    font-size:0.82rem;
+    color:var(--ink-faint);
+    margin-bottom:0.8rem;
+    cursor:pointer;
+  }
+  .file-drop:hover{ border-color:var(--accent); color:var(--accent); }
+  .file-drop.drag-over{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent); }
+
+  /* ---- Preview article styling ---- */
+  .p-header{ margin-bottom:1.6rem; padding-bottom:0.9rem; border-bottom:2px solid var(--ink); }
+  .p-header h1{ font-size:1.55rem; margin:0 0 0.4rem; line-height:1.2; }
+  .p-meta{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.72rem; color:var(--ink-soft);
+    text-transform:uppercase; letter-spacing:0.08em;
+  }
+  .p-block{ margin-bottom:1.6rem; scroll-margin-top:80px; }
+  .p-block h2{
+    font-size:1rem;
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--accent);
+    border-left:3px solid var(--accent);
+    padding-left:0.5rem;
+    margin:0 0 0.7rem;
+  }
+  .p-block p{ margin:0 0 0.85rem; font-size:0.98rem; }
+  .p-links{ margin-top:1.8rem; padding-top:0.9rem; border-top:1px solid var(--line); }
+  .p-links h3{
+    font-family:"Helvetica Neue", Arial, sans-serif;
+    font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em;
+    color:var(--ink-soft); margin:0 0 0.55rem;
+  }
+  .p-links ul{ list-style:none; margin:0; padding:0; }
+  .p-links li{ margin-bottom:0.3rem; }
+  .p-links a{ color:var(--accent); text-decoration:none; font-family:"Helvetica Neue", Arial, sans-serif; font-size:0.88rem; }
+  code{
+    background:var(--code-bg);
+    padding:0.1rem 0.35rem;
+    border-radius:3px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size:0.87em;
+  }
+  .empty-hint{ color:var(--ink-faint); font-size:0.85rem; font-style:italic; }
+
+  .raw-toggle{
+    margin-top:1.6rem;
+    font-size:0.76rem;
+    color:var(--ink-soft);
+    cursor:pointer;
+    text-decoration:underline;
+    display:inline-block;
+  }
+  pre.raw{
+    background:var(--code-bg);
+    padding:0.9rem;
+    border-radius:6px;
+    font-family:"SFMono-Regular", Consolas, monospace;
+    font-size:0.8rem;
+    white-space:pre-wrap;
+    word-break:break-word;
     display:none;
+    margin-top:0.7rem;
   }
+  pre.raw.show{ display:block; }
 
-  @media (max-width: 760px){
-    body{ flex-direction:column; }
-    .sidebar{
-      width:100%;
-      min-height:auto;
-      position:static;
-      padding:14px 16px;
-    }
-    .menu-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      background:#1c1f28;
-      color:#fff;
-      border:1px solid var(--panel-line);
-      border-radius:var(--radius);
-      padding:8px 10px;
-      font-size:13px;
-      cursor:pointer;
-      margin-bottom:12px;
-    }
-    .nav-list{ display:none; }
-    .nav-list.open{ display:block; }
-    .content-wrap{ padding:32px 20px 60px; }
+  footer.site{ text-align:center; padding:1.4rem 1.5rem 2.2rem; }
+  footer.site a{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.75rem; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--ink-soft); text-decoration:none;
   }
+  footer.site a:hover{ color:var(--accent); text-decoration:underline; }
 
-  a:focus-visible, .nav-item:focus-visible, .search:focus-visible, .copy-btn:focus-visible{
-    outline:2px solid var(--accent);
-    outline-offset:2px;
+  .toast{
+    position:fixed;
+    bottom:1.2rem;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--ink);
+    color:var(--paper);
+    padding:0.6rem 1.1rem;
+    border-radius:6px;
+    font-size:0.82rem;
+    opacity:0;
+    pointer-events:none;
+    transition:all .2s ease;
+    z-index:50;
   }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar" aria-label="Navigation de la documentation">
-    <div class="brand">docs<span class="cursor">_</span></div>
+<header class="site">
+  <img src="https://searry8.github.io/docs/gitocs.png" alt="">
+  <h1>Éditeur d'articles</h1>
+  <span class="status-pill" id="status-pill">brouillon</span>
+</header>
 
-    <input class="search" id="search" type="text" placeholder="Rechercher…" aria-label="Rechercher dans la documentation">
+<div class="layout">
 
-    <div id="nav-list" class="nav-list open">
-      <div class="section-label">Démarrer</div>
-      <div class="nav-item" data-page="home" data-keywords="accueil bienvenue">
-        <span>Accueil</span>
-      </div>
-      <div class="nav-item" data-page="install" data-keywords="installation npm setup">
-        <span>Installation</span>
-      </div>
-      <div class="nav-item" data-page="use" data-keywords="utilisation démarrer start">
-        <span>Utilisation</span>
-      </div>
-
-      <div class="section-label">Aller plus loin</div>
-      <div class="nav-item" data-page="config" data-keywords="configuration options env">
-        <span>Configuration</span>
-      </div>
-      <div class="nav-item" data-page="faq" data-keywords="faq questions problèmes erreurs">
-        <span>FAQ</span>
-      </div>
-    </div>
-  </nav>
-
-  <!-- CONTENU -->
-  <div class="content-wrap">
-    <main class="content" id="content" tabindex="-1"></main>
+  <div class="toc-pane">
+    <h4>Sommaire</h4>
+    <ul class="toc-list" id="toc-list"></ul>
+    <div class="toc-stats" id="toc-stats"></div>
   </div>
 
+  <div class="editor-pane">
+
+    <details class="import-box" id="published-box" open>
+      <summary>Modifier un article déjà publié</summary>
+      <div class="import-body">
+        <p class="hint-text">Récupère la liste des articles en ligne sur <code>searry8.github.io</code> et clique sur un article pour le charger dans l'éditeur.</p>
+        <div class="actions" style="margin-top:0;">
+          <button type="button" class="btn-secondary" id="btn-load-published">Charger la liste des articles</button>
+        </div>
+        <ul class="published-list" id="published-list"></ul>
+      </div>
+    </details>
+
+    <details class="import-box">
+      <summary>Importer un fichier .mb (depuis ton ordinateur)</summary>
+      <div class="import-body">
+        <div class="file-drop" id="file-drop">
+          Glisse un fichier .mb ici, ou clique pour en choisir un
+          <input type="file" id="file-input" accept=".mb,.txt" style="display:none">
+        </div>
+        <label>Ou colle le code .mb directement</label>
+        <textarea id="import-text" placeholder="[meta]&#10;title=...&#10;..." style="min-height:90px;"></textarea>
+        <div class="actions">
+          <button type="button" class="btn-secondary" id="btn-import">Charger dans l'éditeur</button>
+        </div>
+      </div>
+    </details>
+
+    <fieldset>
+      <legend>Meta</legend>
+      <label for="f-title">Titre</label>
+      <input type="text" id="f-title" placeholder="Titre de l'article">
+      <label for="f-author">Auteur</label>
+      <input type="text" id="f-author" placeholder="Nom">
+      <label for="f-date">Date</label>
+      <input type="text" id="f-date" placeholder="2026-08-05">
+    </fieldset>
+
+    <fieldset>
+      <legend>Blocs</legend>
+      <div id="blocks-container"></div>
+      <button type="button" class="btn-add" id="add-block">+ Ajouter un bloc</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Liens</legend>
+      <div id="links-container"></div>
+      <button type="button" class="btn-add" id="add-link">+ Ajouter un lien</button>
+    </fieldset>
+
+    <div class="filename-row">
+      Nom du fichier :
+      <input type="text" id="f-filename" value="1">
+      <span>.mb</span>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-main" id="btn-download">Télécharger le .mb</button>
+      <button type="button" class="btn-secondary" id="btn-copy">Copier le texte<span class="copy-msg" id="copy-msg">Copié !</span></button>
+      <button type="button" class="btn-secondary danger" id="btn-reset">Nouvel article</button>
+    </div>
+    <p class="hint-text" id="draft-hint"></p>
+  </div>
+
+  <div class="preview-pane">
+    <div class="preview-inner">
+      <div class="preview-label">
+        <span>Aperçu</span>
+        <span id="reading-time"></span>
+      </div>
+      <div id="preview"></div>
+      <div class="raw-toggle" id="raw-toggle">Afficher / masquer le code .mb brut</div>
+      <pre class="raw" id="raw-output"></pre>
+    </div>
+  </div>
+</div>
+
+<footer class="site">
+  <a href="https://searry8.github.io/docs/Copyright.md" target="_blank" rel="noopener">© Copyright</a>
+</footer>
+
+<div class="toast" id="toast"></div>
+
 <script>
-  const pages = {
-    home: {
-      crumb: "Démarrer / Accueil",
-      title: "Bienvenue",
-      lede: "Tout ce qu'il faut pour installer, configurer et utiliser le projet.",
-      body: `
-        <p>Cette documentation est volontairement courte : trois pages pour démarrer, deux de plus quand on va plus loin. Utilisez le menu à gauche, ou tapez dans la recherche pour filtrer les articles.</p>
-        <div class="callout">💡 Nouveau ici ? Commencez par <strong>Installation</strong>, puis <strong>Utilisation</strong>.</div>
-      `,
-      next: "install"
-    },
-    install: {
-      crumb: "Démarrer / Installation",
-      title: "Installation",
-      lede: "Deux commandes suffisent pour avoir un environnement prêt à l'emploi.",
-      body: `
-        <p>Téléchargez le projet, placez-vous dans le dossier, puis installez les dépendances :</p>
-        <pre><button class="copy-btn" data-copy="npm install">Copier</button>npm install</pre>
-        <p>Node.js 18 ou une version plus récente est requis. Vérifiez votre version avec <code class="inline">node -v</code> avant de continuer.</p>
-      `,
-      prev: "home",
-      next: "use"
-    },
-    use: {
-      crumb: "Démarrer / Utilisation",
-      title: "Utilisation",
-      lede: "Lancer le projet en local en une commande.",
-      body: `
-        <p>Une fois les dépendances installées, démarrez le serveur de développement :</p>
-        <pre><button class="copy-btn" data-copy="npm start">Copier</button>npm start</pre>
-        <p>Par défaut, l'application est accessible sur <code class="inline">http://localhost:3000</code>. Le port peut être changé dans la configuration.</p>
-      `,
-      prev: "install",
-      next: "config"
-    },
-    config: {
-      crumb: "Aller plus loin / Configuration",
-      title: "Configuration",
-      lede: "Adapter le comportement du projet à votre environnement.",
-      body: `
-        <p>La configuration se fait via un fichier <code class="inline">.env</code> à la racine du projet :</p>
-        <pre><button class="copy-btn" data-copy="PORT=4000&#10;API_URL=https://api.example.com">Copier</button>PORT=4000
-API_URL=https://api.example.com</pre>
-        <p>Toute variable définie ici est rechargée automatiquement au prochain démarrage du serveur.</p>
-      `,
-      prev: "use",
-      next: "faq"
-    },
-    faq: {
-      crumb: "Aller plus loin / FAQ",
-      title: "Questions fréquentes",
-      lede: "Les problèmes les plus courants, et comment les résoudre.",
-      body: `
-        <h2>La commande npm install échoue</h2>
-        <p>Vérifiez votre version de Node.js et supprimez le dossier <code class="inline">node_modules</code> avant de réessayer.</p>
-        <h2>Le port 3000 est déjà utilisé</h2>
-        <p>Changez la variable <code class="inline">PORT</code> dans votre fichier <code class="inline">.env</code>, voir la page Configuration.</p>
-      `,
-      prev: "config"
+/* =========================================================
+   State
+   ========================================================= */
+let uid = 0;
+const nextId = () => ++uid;
+
+const state = {
+  meta: { title:"Titre de l'article", author:"Nom", date:"2026-08-05" },
+  blocks: [],
+  links: [],
+  sourceNumber: null /* numéro de l'article publié en cours d'édition, si applicable */
+};
+
+const BASE_URL = "https://searry8.github.io/docs/8/";
+const DRAFT_KEY = "mb-editor-draft";
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+function escapeAttr(str){ return (str||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;"); }
+function escapeHtmlText(str){ return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._tm);
+  showToast._tm = setTimeout(() => t.classList.remove("show"), 1600);
+}
+
+function markDirty(){
+  document.getElementById("status-pill").textContent = "modifié";
+  scheduleSaveDraft();
+}
+
+/* =========================================================
+   Mémoire cache du brouillon
+   (window.storage quand disponible, sinon localStorage du navigateur)
+   ========================================================= */
+async function persistDraft(payload){
+  try{
+    if(window.storage){
+      await window.storage.set(DRAFT_KEY, payload);
+      return true;
     }
-  };
+  } catch(e){ /* on retente via localStorage */ }
+  try{
+    if(window.localStorage){
+      localStorage.setItem(DRAFT_KEY, payload);
+      return true;
+    }
+  } catch(e){ /* stockage indisponible (navigation privée, etc.) */ }
+  return false;
+}
 
-  const contentEl = document.getElementById("content");
-  const navList = document.getElementById("nav-list");
-  const navItems = [...document.querySelectorAll(".nav-item")];
-  const searchEl = document.getElementById("search");
+async function readDraft(){
+  try{
+    if(window.storage){
+      const res = await window.storage.get(DRAFT_KEY);
+      if(res && res.value) return res.value;
+    }
+  } catch(e){ /* pas de brouillon côté storage */ }
+  try{
+    if(window.localStorage){
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if(raw) return raw;
+    }
+  } catch(e){ /* stockage indisponible */ }
+  return null;
+}
 
-  function render(pageKey){
-    const page = pages[pageKey];
-    if(!page) return;
+async function clearDraft(){
+  try{ if(window.storage) await window.storage.delete(DRAFT_KEY); } catch(e){}
+  try{ if(window.localStorage) localStorage.removeItem(DRAFT_KEY); } catch(e){}
+}
 
-    navItems.forEach(item => {
-      item.classList.toggle("active", item.dataset.page === pageKey);
-    });
+let saveTimer = null;
+function scheduleSaveDraft(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveDraftNow, 600);
+}
 
-    const prevLink = page.prev
-      ? `<a href="#" data-nav="${page.prev}"><span class="dir">← Précédent</span>${pages[page.prev].title}</a>`
-      : `<span></span>`;
-    const nextLink = page.next
-      ? `<a href="#" data-nav="${page.next}" class="next"><span class="dir">Suivant →</span>${pages[page.next].title}</a>`
-      : `<span></span>`;
+async function saveDraftNow(){
+  const payload = JSON.stringify({ meta: state.meta, blocks: state.blocks, links: state.links, sourceNumber: state.sourceNumber });
+  const ok = await persistDraft(payload);
+  const hint = document.getElementById("draft-hint");
+  if(ok){
+    const time = new Date().toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+    hint.textContent = `Brouillon enregistré automatiquement à ${time}`;
+  } else {
+    hint.textContent = "Impossible d'enregistrer le brouillon dans ce navigateur.";
+  }
+}
 
-    contentEl.innerHTML = `
-      <div class="breadcrumb">${page.crumb.replace(/\/([^/]+)$/, '/ <span class="accent">$1</span>')}</div>
-      <h1>${page.title}</h1>
-      <p class="lede">${page.lede}</p>
-      ${page.body}
-      <div class="pager">${prevLink}${nextLink}</div>
-    `;
+async function tryRestoreDraft(){
+  const raw = await readDraft();
+  if(!raw) return false;
+  try{
+    const data = JSON.parse(raw);
+    state.meta = data.meta || state.meta;
+    state.sourceNumber = data.sourceNumber ?? null;
+    state.blocks = (data.blocks || []).map(b => ({ ...b, id: nextId() }));
+    state.links = (data.links || []).map(l => ({ ...l, id: nextId() }));
 
-    contentEl.focus();
-    history.replaceState(null, "", "#" + pageKey);
+    document.getElementById("f-title").value = state.meta.title || "";
+    document.getElementById("f-author").value = state.meta.author || "";
+    document.getElementById("f-date").value = state.meta.date || "";
+    if(state.sourceNumber) document.getElementById("f-filename").value = state.sourceNumber;
 
-    contentEl.querySelectorAll("[data-nav]").forEach(el => {
-      el.addEventListener("click", e => {
-        e.preventDefault();
-        render(el.dataset.nav);
-      });
-    });
+    renderBlocks();
+    renderLinks();
+    updatePreview();
+    document.getElementById("status-pill").textContent = "brouillon restauré";
+    document.getElementById("draft-hint").textContent = "Reprise de ton brouillon précédent.";
+    return true;
+  } catch(e){
+    return false;
+  }
+}
 
-    contentEl.querySelectorAll(".copy-btn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        try{
-          await navigator.clipboard.writeText(btn.dataset.copy.replace(/&#10;/g, "\n"));
-          const old = btn.textContent;
-          btn.textContent = "Copié ✓";
-          setTimeout(() => btn.textContent = old, 1400);
-        }catch(e){ /* clipboard indisponible, on ignore silencieusement */ }
-      });
+/* =========================================================
+   Génération du texte .mb à partir du state
+   ========================================================= */
+function generateMb(){
+  let out = "[meta]\n";
+  out += `title=${state.meta.title}\n`;
+  out += `author=${state.meta.author}\n`;
+  out += `date=${state.meta.date}\n`;
+
+  state.blocks.forEach(b => {
+    out += "[block]\n";
+    out += `${b.title}\n`;
+    out += `${b.content}\n`;
+  });
+
+  if(state.links.length){
+    out += "[link]\n";
+    state.links.forEach(l => {
+      if(l.name || l.url) out += `${l.name}|${l.url}\n`;
     });
   }
 
-  navItems.forEach(item => {
-    item.addEventListener("click", () => render(item.dataset.page));
+  return out.trim() + "\n";
+}
+
+/* =========================================================
+   Parsing (identique au lecteur)
+   ========================================================= */
+function parseArticle(raw){
+  const lines = raw.split(/\r?\n/);
+  const article = { meta:{}, blocks:[], links:[] };
+  let mode = null;
+  let currentBlock = null;
+
+  for(const line of lines){
+    const trimmed = line.trim();
+    if(trimmed === "[meta]"){ mode = "meta"; continue; }
+    if(trimmed === "[block]"){
+      mode = "block";
+      currentBlock = { title:null, lines:[] };
+      article.blocks.push(currentBlock);
+      continue;
+    }
+    if(trimmed === "[link]"){ mode = "link"; continue; }
+
+    if(mode === "meta"){
+      const idx = line.indexOf("=");
+      if(idx > -1) article.meta[line.slice(0, idx).trim()] = line.slice(idx+1).trim();
+    } else if(mode === "block"){
+      if(currentBlock.title === null){
+        if(trimmed !== ""){ currentBlock.title = trimmed; }
+      } else {
+        currentBlock.lines.push(line);
+      }
+    } else if(mode === "link"){
+      if(trimmed === "") continue;
+      const idx = trimmed.indexOf("|");
+      if(idx > -1) article.links.push({ name: trimmed.slice(0, idx).trim(), url: trimmed.slice(idx+1).trim() });
+    }
+  }
+  return article;
+}
+
+function loadParsedIntoState(parsed){
+  state.meta.title = parsed.meta.title || "";
+  state.meta.author = parsed.meta.author || "";
+  state.meta.date = parsed.meta.date || "";
+  state.sourceNumber = null;
+  state.blocks = parsed.blocks.map(b => ({ id: nextId(), title: b.title || "", content: b.lines.join("\n").replace(/^\n+/,""), collapsed:false }));
+  state.links = parsed.links.map(l => ({ id: nextId(), name: l.name, url: l.url }));
+
+  document.getElementById("f-title").value = state.meta.title;
+  document.getElementById("f-author").value = state.meta.author;
+  document.getElementById("f-date").value = state.meta.date;
+
+  renderBlocks();
+  renderLinks();
+  updatePreview();
+}
+
+/* =========================================================
+   Rendu inline (gras / italique / code)
+   ========================================================= */
+function renderInline(text){
+  let escaped = escapeHtmlText(text);
+  escaped = escaped.replace(/`([^`]+)`/g, "<code>$1</code>");
+  escaped = escaped.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  escaped = escaped.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  return escaped;
+}
+function renderBlockLines(content){
+  return content.split(/\r?\n/)
+    .filter(l => l.trim() !== "")
+    .map(l => `<p>${renderInline(l.trim())}</p>`)
+    .join("");
+}
+
+/* =========================================================
+   Rendu des blocs (formulaire)
+   ========================================================= */
+const blocksContainer = document.getElementById("blocks-container");
+const linksContainer = document.getElementById("links-container");
+
+function renderBlocks(){
+  blocksContainer.innerHTML = "";
+  state.blocks.forEach((b, idx) => {
+    const div = document.createElement("div");
+    div.className = "block-item";
+    div.draggable = true;
+    div.dataset.id = b.id;
+    div.dataset.type = "block";
+    div.innerHTML = `
+      <div class="block-item-inner">
+        <div class="item-head" data-toggle="${b.id}">
+          <div class="item-head-left">
+            <span class="drag-handle">⋮⋮</span>
+            <span class="item-num">Bloc ${idx+1}</span>
+            <span class="item-title-preview">${escapeHtmlText(b.title || "(sans titre)")}</span>
+          </div>
+          <div class="item-btns">
+            <button type="button" class="icon-btn" title="Monter" data-move-up="${b.id}">↑</button>
+            <button type="button" class="icon-btn" title="Descendre" data-move-down="${b.id}">↓</button>
+            <button type="button" class="icon-btn" title="Dupliquer" data-duplicate="${b.id}">⧉</button>
+            <button type="button" class="icon-btn" title="Replier/déplier" data-collapse="${b.id}">${b.collapsed ? "▸" : "▾"}</button>
+            <button type="button" class="icon-btn danger" title="Supprimer" data-remove-block="${b.id}">✕</button>
+          </div>
+        </div>
+        <div class="block-body ${b.collapsed ? "collapsed" : ""}" id="block-body-${b.id}">
+          <input type="text" class="block-title" data-field="title" data-id="${b.id}" value="${escapeAttr(b.title)}" placeholder="Titre du bloc…">
+          <div class="toolbar">
+            <button type="button" class="tb-btn b" data-fmt="bold" data-target="${b.id}" title="Gras (Ctrl+B)">G</button>
+            <button type="button" class="tb-btn i" data-fmt="italic" data-target="${b.id}" title="Italique (Ctrl+I)">I</button>
+            <button type="button" class="tb-btn c" data-fmt="code" data-target="${b.id}" title="Code (Ctrl+E)">&lt;/&gt;</button>
+          </div>
+          <textarea class="block-content" data-field="content" data-id="${b.id}" id="block-content-${b.id}" rows="1" placeholder="Écris ici. Une ligne = un paragraphe. *italique*, **gras**, \`code\`.">${escapeHtmlText(b.content)}</textarea>
+          <div class="block-meta-line">
+            <span id="block-wc-${b.id}"></span>
+          </div>
+        </div>
+      </div>
+    `;
+    blocksContainer.appendChild(div);
+    updateBlockWordCount(b.id);
+    autoGrow(document.getElementById(`block-content-${b.id}`));
+  });
+  attachBlockEvents();
+  renderToc();
+}
+
+/* Fait grandir un textarea avec son contenu, sans barre de défilement */
+function autoGrow(el){
+  if(!el) return;
+  el.style.height = "auto";
+  el.style.height = (el.scrollHeight + 2) + "px";
+}
+
+function updateBlockWordCount(id){
+  const b = state.blocks.find(x => x.id === id);
+  if(!b) return;
+  const words = (b.content.match(/\S+/g) || []).length;
+  const el = document.getElementById(`block-wc-${id}`);
+  if(el) el.textContent = `${words} mot${words>1?"s":""}`;
+}
+
+function attachBlockEvents(){
+  blocksContainer.querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", () => {
+      const id = parseInt(el.dataset.id, 10);
+      const b = state.blocks.find(x => x.id === id);
+      if(!b) return;
+      b[el.dataset.field] = el.value;
+      if(el.dataset.field === "title"){
+        const titlePrev = el.closest(".block-item").querySelector(".item-title-preview");
+        titlePrev.textContent = el.value || "(sans titre)";
+      }
+      if(el.dataset.field === "content"){
+        updateBlockWordCount(id);
+        autoGrow(el);
+      }
+      markDirty();
+      updatePreview();
+      renderToc();
+    });
+    if(el.dataset.field === "content"){
+      el.addEventListener("keydown", handleTextareaShortcut);
+    }
   });
 
-  searchEl.addEventListener("input", () => {
-    const q = searchEl.value.trim().toLowerCase();
-    navItems.forEach(item => {
-      const text = (item.textContent + " " + item.dataset.keywords).toLowerCase();
-      item.hidden = q.length > 0 && !text.includes(q);
+  blocksContainer.querySelectorAll("[data-move-up]").forEach(el => el.addEventListener("click", () => moveBlock(parseInt(el.dataset.moveUp,10), -1)));
+  blocksContainer.querySelectorAll("[data-move-down]").forEach(el => el.addEventListener("click", () => moveBlock(parseInt(el.dataset.moveDown,10), 1)));
+  blocksContainer.querySelectorAll("[data-duplicate]").forEach(el => el.addEventListener("click", () => duplicateBlock(parseInt(el.dataset.duplicate,10))));
+  blocksContainer.querySelectorAll("[data-remove-block]").forEach(el => el.addEventListener("click", () => removeBlock(parseInt(el.dataset.removeBlock,10))));
+  blocksContainer.querySelectorAll("[data-collapse]").forEach(el => el.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleCollapse(parseInt(el.dataset.collapse,10));
+  }));
+  blocksContainer.querySelectorAll(".tb-btn").forEach(el => el.addEventListener("click", () => {
+    const id = parseInt(el.dataset.target, 10);
+    applyFormat(id, el.dataset.fmt);
+  }));
+
+  // drag and drop reorder
+  blocksContainer.querySelectorAll(".block-item").forEach(item => {
+    item.addEventListener("dragstart", () => item.classList.add("dragging"));
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+      blocksContainer.querySelectorAll(".block-item").forEach(x => x.classList.remove("drag-over"));
+    });
+    item.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      item.classList.add("drag-over");
+    });
+    item.addEventListener("dragleave", () => item.classList.remove("drag-over"));
+    item.addEventListener("drop", (e) => {
+      e.preventDefault();
+      item.classList.remove("drag-over");
+      const draggingEl = blocksContainer.querySelector(".dragging");
+      if(!draggingEl || draggingEl === item) return;
+      const fromId = parseInt(draggingEl.dataset.id, 10);
+      const toId = parseInt(item.dataset.id, 10);
+      reorderBlocks(fromId, toId);
     });
   });
+}
 
-  // page initiale : lit le hash de l'URL si présent, sinon "home"
-  const initial = location.hash.replace("#", "");
-  render(pages[initial] ? initial : "home");
+function moveBlock(id, dir){
+  const idx = state.blocks.findIndex(b => b.id === id);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= state.blocks.length) return;
+  const [item] = state.blocks.splice(idx, 1);
+  state.blocks.splice(newIdx, 0, item);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function reorderBlocks(fromId, toId){
+  const fromIdx = state.blocks.findIndex(b => b.id === fromId);
+  const toIdx = state.blocks.findIndex(b => b.id === toId);
+  if(fromIdx === -1 || toIdx === -1) return;
+  const [item] = state.blocks.splice(fromIdx, 1);
+  state.blocks.splice(toIdx, 0, item);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function duplicateBlock(id){
+  const idx = state.blocks.findIndex(b => b.id === id);
+  if(idx === -1) return;
+  const copy = { ...state.blocks[idx], id: nextId() };
+  state.blocks.splice(idx+1, 0, copy);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function removeBlock(id){
+  state.blocks = state.blocks.filter(b => b.id !== id);
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+function toggleCollapse(id){
+  const b = state.blocks.find(x => x.id === id);
+  if(!b) return;
+  b.collapsed = !b.collapsed;
+  renderBlocks();
+}
+
+function addBlock(title="", content=""){
+  state.blocks.push({ id: nextId(), title, content, collapsed:false });
+  markDirty();
+  renderBlocks();
+  updatePreview();
+}
+
+/* ---- Formatage via la barre d'outils / raccourcis ---- */
+function wrapSelection(textarea, prefix, suffix){
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = textarea.value;
+  const selected = value.slice(start, end) || "texte";
+  const newValue = value.slice(0, start) + prefix + selected + suffix + value.slice(end);
+  textarea.value = newValue;
+  textarea.focus();
+  textarea.selectionStart = start + prefix.length;
+  textarea.selectionEnd = start + prefix.length + selected.length;
+  textarea.dispatchEvent(new Event("input"));
+}
+
+function applyFormat(blockId, fmt){
+  const textarea = document.getElementById(`block-content-${blockId}`);
+  if(!textarea) return;
+  if(fmt === "bold") wrapSelection(textarea, "**", "**");
+  if(fmt === "italic") wrapSelection(textarea, "*", "*");
+  if(fmt === "code") wrapSelection(textarea, "`", "`");
+}
+
+function handleTextareaShortcut(e){
+  const isMod = e.ctrlKey || e.metaKey;
+  if(!isMod) return;
+  const id = parseInt(e.target.dataset.id, 10);
+  if(e.key.toLowerCase() === "b"){ e.preventDefault(); applyFormat(id, "bold"); }
+  if(e.key.toLowerCase() === "i"){ e.preventDefault(); applyFormat(id, "italic"); }
+  if(e.key.toLowerCase() === "e"){ e.preventDefault(); applyFormat(id, "code"); }
+}
+
+/* =========================================================
+   Rendu des liens
+   ========================================================= */
+function renderLinks(){
+  linksContainer.innerHTML = "";
+  state.links.forEach((l, idx) => {
+    const div = document.createElement("div");
+    div.className = "link-item";
+    div.draggable = true;
+    div.dataset.id = l.id;
+    div.innerHTML = `
+      <div class="block-item-inner">
+        <div class="item-head">
+          <div class="item-head-left">
+            <span class="drag-handle">⋮⋮</span>
+            <span class="item-num">Lien ${idx+1}</span>
+          </div>
+          <div class="item-btns">
+            <button type="button" class="icon-btn" title="Monter" data-move-up-link="${l.id}">↑</button>
+            <button type="button" class="icon-btn" title="Descendre" data-move-down-link="${l.id}">↓</button>
+            <button type="button" class="icon-btn danger" title="Supprimer" data-remove-link="${l.id}">✕</button>
+          </div>
+        </div>
+        <div class="link-row">
+          <div>
+            <label>Nom</label>
+            <input type="text" class="link-name" data-field="name" data-id="${l.id}" value="${escapeAttr(l.name)}" placeholder="Nom du lien">
+          </div>
+          <div>
+            <label>URL</label>
+            <input type="text" class="link-url" data-field="url" data-id="${l.id}" value="${escapeAttr(l.url)}" placeholder="https://example.com">
+          </div>
+        </div>
+      </div>
+    `;
+    linksContainer.appendChild(div);
+  });
+  attachLinkEvents();
+}
+
+function attachLinkEvents(){
+  linksContainer.querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", () => {
+      const id = parseInt(el.dataset.id, 10);
+      const l = state.links.find(x => x.id === id);
+      if(!l) return;
+      l[el.dataset.field] = el.value;
+      markDirty();
+      updatePreview();
+    });
+  });
+  linksContainer.querySelectorAll("[data-move-up-link]").forEach(el => el.addEventListener("click", () => moveLink(parseInt(el.dataset.moveUpLink,10), -1)));
+  linksContainer.querySelectorAll("[data-move-down-link]").forEach(el => el.addEventListener("click", () => moveLink(parseInt(el.dataset.moveDownLink,10), 1)));
+  linksContainer.querySelectorAll("[data-remove-link]").forEach(el => el.addEventListener("click", () => removeLink(parseInt(el.dataset.removeLink,10))));
+}
+
+function moveLink(id, dir){
+  const idx = state.links.findIndex(l => l.id === id);
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= state.links.length) return;
+  const [item] = state.links.splice(idx, 1);
+  state.links.splice(newIdx, 0, item);
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+function removeLink(id){
+  state.links = state.links.filter(l => l.id !== id);
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+function addLink(name="", url=""){
+  state.links.push({ id: nextId(), name, url });
+  markDirty();
+  renderLinks();
+  updatePreview();
+}
+
+/* =========================================================
+   Sommaire (TOC)
+   ========================================================= */
+function renderToc(){
+  const tocList = document.getElementById("toc-list");
+  tocList.innerHTML = state.blocks.map((b, idx) => `
+    <li><a href="#preview-block-${b.id}">${idx+1}. ${escapeHtmlText(b.title || "(sans titre)")}</a></li>
+  `).join("") || `<li class="empty-hint" style="padding-left:0.5rem;">Aucun bloc</li>`;
+
+  const totalWords = state.blocks.reduce((sum, b) => sum + (b.content.match(/\S+/g) || []).length, 0);
+  const readingMin = Math.max(1, Math.round(totalWords / 200));
+  document.getElementById("toc-stats").innerHTML = `
+    <b>${state.blocks.length}</b> bloc${state.blocks.length>1?"s":""}<br>
+    <b>${state.links.length}</b> lien${state.links.length>1?"s":""}<br>
+    <b>${totalWords}</b> mots · ~${readingMin} min de lecture
+  `;
+  document.getElementById("reading-time").textContent = `~${readingMin} min de lecture`;
+}
+
+/* =========================================================
+   Aperçu
+   ========================================================= */
+function renderPreview(){
+  const blocksHtml = state.blocks.length ? state.blocks.map(b => `
+    <div class="p-block" id="preview-block-${b.id}">
+      ${b.title ? `<h2>${escapeHtmlText(b.title)}</h2>` : ""}
+      ${renderBlockLines(b.content) || `<p class="empty-hint">Bloc vide</p>`}
+    </div>
+  `).join("") : `<p class="empty-hint">Ajoute un bloc pour voir l'aperçu.</p>`;
+
+  const linksHtml = state.links.length ? `
+    <div class="p-links">
+      <h3>Liens</h3>
+      <ul>
+        ${state.links.map(l => `<li><a href="${escapeHtmlText(l.url)}" target="_blank" rel="noopener">${escapeHtmlText(l.name || l.url)}</a></li>`).join("")}
+      </ul>
+    </div>
+  ` : "";
+
+  document.getElementById("preview").innerHTML = `
+    <div class="p-header">
+      <h1>${escapeHtmlText(state.meta.title || "Titre de l'article")}</h1>
+      <div class="p-meta">${[state.meta.author, state.meta.date].filter(Boolean).map(escapeHtmlText).join(" · ")}</div>
+    </div>
+    ${blocksHtml}
+    ${linksHtml}
+  `;
+}
+
+function updatePreview(){
+  renderPreview();
+  document.getElementById("raw-output").textContent = generateMb();
+  renderToc();
+}
+
+/* =========================================================
+   Meta fields
+   ========================================================= */
+["f-title","f-author","f-date"].forEach(id => {
+  document.getElementById(id).addEventListener("input", (e) => {
+    const key = id.replace("f-", "");
+    state.meta[key] = e.target.value;
+    markDirty();
+    updatePreview();
+  });
+});
+
+/* =========================================================
+   Boutons globaux
+   ========================================================= */
+document.getElementById("add-block").addEventListener("click", () => addBlock());
+document.getElementById("add-link").addEventListener("click", () => addLink());
+
+document.getElementById("raw-toggle").addEventListener("click", () => {
+  document.getElementById("raw-output").classList.toggle("show");
+});
+
+document.getElementById("btn-download").addEventListener("click", () => {
+  const raw = generateMb();
+  const filename = (document.getElementById("f-filename").value.trim() || "1") + ".mb";
+  const blob = new Blob([raw], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  document.getElementById("status-pill").textContent = "téléchargé";
+  showToast(`${filename} téléchargé`);
+});
+
+document.getElementById("btn-copy").addEventListener("click", async () => {
+  const raw = generateMb();
+  try{
+    await navigator.clipboard.writeText(raw);
+  } catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = raw;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+  const msg = document.getElementById("copy-msg");
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 1500);
+  showToast("Code .mb copié");
+});
+
+document.getElementById("btn-reset").addEventListener("click", () => {
+  if(!confirm("Repartir sur un nouvel article ? Le brouillon en cours sera effacé.")) return;
+  state.meta = { title:"", author:"", date:"" };
+  state.blocks = [];
+  state.links = [];
+  state.sourceNumber = null;
+  document.getElementById("f-title").value = "";
+  document.getElementById("f-author").value = "";
+  document.getElementById("f-date").value = "";
+  document.getElementById("f-filename").value = "1";
+  renderBlocks();
+  renderLinks();
+  updatePreview();
+  clearDraft();
+  document.getElementById("draft-hint").textContent = "";
+  document.getElementById("status-pill").textContent = "brouillon";
+  showToast("Nouvel article vierge");
+});
+
+/* =========================================================
+   Articles déjà publiés (chargement depuis le site)
+   ========================================================= */
+const publishedCache = {}; // { n: rawText }
+
+async function fetchPublished(n){
+  if(publishedCache[n] !== undefined) return publishedCache[n];
+  const res = await fetch(`${BASE_URL}${n}.mb`, { cache:"no-store" });
+  if(!res.ok) throw new Error("not found");
+  const text = await res.text();
+  publishedCache[n] = text;
+  return text;
+}
+
+document.getElementById("btn-load-published").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-load-published");
+  const list = document.getElementById("published-list");
+  btn.disabled = true;
+  btn.textContent = "Chargement…";
+  list.innerHTML = "";
+
+  const found = [];
+  let n = 1;
+  while(true){
+    try{
+      const raw = await fetchPublished(n);
+      const parsed = parseArticle(raw);
+      found.push({ n, title: parsed.meta.title || `Article ${n}`, author: parsed.meta.author || "", date: parsed.meta.date || "" });
+      n++;
+    } catch(e){
+      break;
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Recharger la liste";
+
+  if(found.length === 0){
+    list.innerHTML = `<li class="pub-empty">Aucun article trouvé sur le site.</li>`;
+    return;
+  }
+
+  list.innerHTML = found.map(a => `
+    <li>
+      <button type="button" data-load-published="${a.n}">
+        <span class="pub-title">${escapeHtmlText(a.title)}</span>
+        <span class="pub-meta">Article ${a.n}${a.author ? " · " + escapeHtmlText(a.author) : ""}${a.date ? " · " + escapeHtmlText(a.date) : ""}</span>
+      </button>
+    </li>
+  `).join("");
+
+  list.querySelectorAll("[data-load-published]").forEach(el => {
+    el.addEventListener("click", () => loadPublishedArticle(parseInt(el.dataset.loadPublished, 10)));
+  });
+});
+
+async function loadPublishedArticle(n){
+  const hasContent = state.blocks.length > 0 && state.blocks.some(b => b.title || b.content);
+  if(hasContent && !confirm(`Charger l'article ${n} ? Le brouillon actuel dans l'éditeur sera remplacé (il reste toutefois récupérable tant que tu ne l'écrases pas volontairement).`)) return;
+
+  try{
+    const raw = await fetchPublished(n);
+    const parsed = parseArticle(raw);
+    loadParsedIntoState(parsed);
+    state.sourceNumber = n;
+    document.getElementById("f-filename").value = n;
+    document.getElementById("status-pill").textContent = `édition — article ${n}`;
+    showToast(`Article ${n} chargé pour modification`);
+    scheduleSaveDraft();
+  } catch(e){
+    showToast(`Impossible de charger l'article ${n}`);
+  }
+}
+
+/* =========================================================
+   Import
+   ========================================================= */
+document.getElementById("btn-import").addEventListener("click", () => {
+  const raw = document.getElementById("import-text").value;
+  if(!raw.trim()){ showToast("Colle du texte .mb avant de charger"); return; }
+  const parsed = parseArticle(raw);
+  loadParsedIntoState(parsed);
+  document.getElementById("status-pill").textContent = "importé";
+  showToast("Article importé dans l'éditeur");
+  scheduleSaveDraft();
+});
+
+const fileDrop = document.getElementById("file-drop");
+const fileInput = document.getElementById("file-input");
+
+fileDrop.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => {
+  if(fileInput.files[0]) readMbFile(fileInput.files[0]);
+});
+fileDrop.addEventListener("dragover", (e) => { e.preventDefault(); fileDrop.classList.add("drag-over"); });
+fileDrop.addEventListener("dragleave", () => fileDrop.classList.remove("drag-over"));
+fileDrop.addEventListener("drop", (e) => {
+  e.preventDefault();
+  fileDrop.classList.remove("drag-over");
+  if(e.dataTransfer.files[0]) readMbFile(e.dataTransfer.files[0]);
+});
+
+function readMbFile(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    const parsed = parseArticle(reader.result);
+    loadParsedIntoState(parsed);
+    document.getElementById("status-pill").textContent = "importé";
+    showToast(`${file.name} chargé dans l'éditeur`);
+    scheduleSaveDraft();
+  };
+  reader.readAsText(file);
+}
+
+/* =========================================================
+   Initialisation : on tente d'abord de restaurer un brouillon,
+   sinon on démarre avec un exemple
+   ========================================================= */
+(async function init(){
+  const restored = await tryRestoreDraft();
+  if(!restored){
+    addBlock("Introduction", "Voici une introduction simple.\nTu peux mettre du texte *important* ou même du `code`.");
+    addBlock("Partie 1", "Tu écris normalement.\n*Italique*, **gras**, `code`.");
+    addBlock("Conclusion", "Fin de l'article.");
+    addLink("Nom du lien", "https://example.com");
+    updatePreview();
+    document.getElementById("status-pill").textContent = "brouillon";
+  }
+})();
 </script>
+
 </body>
 </html>
