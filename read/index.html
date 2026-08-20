@@ -48,6 +48,80 @@
     margin:0 auto;
     padding:2rem 1.5rem 4rem;
   }
+  /* -------- DISCLAIMER -------- */
+  #disclaimer-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(30,36,34,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    padding:1.5rem;
+  }
+  #disclaimer-box{
+    background:var(--paper-raised);
+    max-width:560px;
+    width:100%;
+    border-radius:6px;
+    padding:2rem 1.8rem;
+    box-shadow:0 10px 40px rgba(0,0,0,0.35);
+    max-height:85vh;
+    overflow-y:auto;
+  }
+  #disclaimer-box h2{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--accent);
+    border-left:3px solid var(--accent);
+    padding-left:0.6rem;
+    margin:0 0 1.1rem;
+  }
+  #disclaimer-box p{
+    font-size:0.98rem;
+    margin:0 0 1rem;
+    color:var(--ink);
+  }
+  #disclaimer-box ul{
+    margin:0 0 1.2rem;
+    padding-left:1.2rem;
+  }
+  #disclaimer-box li{
+    margin-bottom:0.5rem;
+    font-size:0.95rem;
+  }
+  #disclaimer-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:0.8rem;
+    margin-top:1.5rem;
+    border-top:1px solid var(--line);
+    padding-top:1.2rem;
+  }
+  #disclaimer-actions button{
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size:0.8rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:0.7rem 1.3rem;
+    border-radius:4px;
+    border:1px solid var(--accent);
+    cursor:pointer;
+    background:var(--accent);
+    color:#fff;
+    transition:opacity .15s ease;
+  }
+  #disclaimer-actions button:hover{
+    opacity:0.85;
+  }
+  body.site-locked main,
+  body.site-locked footer.site{
+    filter:blur(6px);
+    pointer-events:none;
+    user-select:none;
+  }
   /* -------- LISTE -------- */
   #status{
     font-family: "Helvetica Neue", Arial, sans-serif;
@@ -187,7 +261,25 @@
   }
 </style>
 </head>
-<body>
+<body class="site-locked">
+
+<div id="disclaimer-overlay">
+  <div id="disclaimer-box">
+    <h2>Avertissement</h2>
+    <p>Avant d'accéder à ce site, merci de lire attentivement ce qui suit :</p>
+    <ul>
+      <li>Les articles publiés ici sont des contenus théoriques, protégés par le droit d'auteur. Toute reproduction ou réutilisation sans autorisation est interdite.</li>
+      <li>Le contenu proposé peut être incorrect, incomplet, choquant ou inadapté à un jeune public.</li>
+      <li>Ce site n'est pas destiné aux mineurs.</li>
+      <li>Nous déclinons toute responsabilité quant aux conséquences, de quelque nature qu'elles soient, pouvant résulter de la lecture de ces articles.</li>
+      <li>La consultation de ce site et de son contenu se fait à vos propres risques et périls.</li>
+    </ul>
+    <p>En cliquant sur « J'ai compris, continuer », vous reconnaissez avoir lu et accepté cet avertissement.</p>
+    <div id="disclaimer-actions">
+      <button id="disclaimer-accept" type="button">J'ai compris, continuer</button>
+    </div>
+  </div>
+</div>
 
 <header class="site">
   <h1>Articles</h1>
@@ -203,6 +295,11 @@
 </footer>
 
 <script>
+document.getElementById("disclaimer-accept").addEventListener("click", function(){
+  document.getElementById("disclaimer-overlay").remove();
+  document.body.classList.remove("site-locked");
+});
+
 const BASE_URL = "https://searry8.github.io/docs/8/";
 
 // ----- Cache des articles déjà chargés -----
