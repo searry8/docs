@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leçons</title>
+<style>
+:root{--paper:#f6f4ef;--raised:#fff;--ink:#1e2422;--soft:#5b6460;--accent:#2f5d55;--accent-soft:#dfe9e6;--line:#d8d4c8;--code:#eceae2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 Georgia,"Iowan Old Style",serif}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ui,.btn,.ameta,.back,.sub,.links,.status,footer{font-family:"Helvetica Neue",Arial,sans-serif}
+header.site{padding:2.2rem 1.5rem 1.4rem;text-align:center;border-bottom:1px solid var(--line)}
+header.site h1{font-size:2rem;letter-spacing:.02em;margin:0;font-weight:600}
+.sub{color:var(--soft);font-size:.85rem;text-transform:uppercase;letter-spacing:.15em;margin:.5rem 0 0}
+main{max-width:720px;margin:0 auto;padding:2rem 1.5rem 3rem}
+.status{text-align:center;color:var(--soft);font-size:.92rem;padding:2rem 0;line-height:1.6}
+.status code{background:var(--code);padding:.1rem .35rem;border-radius:3px}
+.list{list-style:none;margin:0;padding:0}
+.list li{border-bottom:1px solid var(--line)}
+.list a{display:flex;gap:1.1rem;align-items:baseline;padding:1.3rem .25rem;text-decoration:none;color:inherit}
+.list .n{font-size:1.3rem;font-weight:600;color:var(--accent);min-width:1.6rem}
+.list a:hover .t{color:var(--accent)}
+.t{font-size:1.3rem;font-weight:600;transition:color .15s}
+.ameta{font-size:.78rem;color:var(--soft);text-transform:uppercase;letter-spacing:.08em;margin-top:.3rem}
+.back{display:inline-block;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-decoration:none;margin-bottom:1.4rem}
+.back:hover{text-decoration:underline}
+.head{margin-bottom:2rem;padding-bottom:1.1rem;border-bottom:2px solid var(--ink)}
+.head h1{font-size:2.1rem;margin:0 0 .6rem;line-height:1.2}
+.block{margin-bottom:2.1rem}
+.block h2{font:600 1.1rem "Helvetica Neue",Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);border-left:3px solid var(--accent);padding-left:.6rem;margin:0 0 .9rem}
+.block h3{font-family:"Helvetica Neue",Arial,sans-serif}
+p{margin:0 0 1rem}
+code{background:var(--code);padding:.1rem .35rem;border-radius:3px;font:.88em ui-monospace,Consolas,monospace}
+pre{background:var(--code);padding:1rem;border-radius:5px;overflow:auto;font-size:.9rem;line-height:1.5}
+pre code{padding:0;background:none}
+blockquote{margin:1rem 0;padding:.1rem 1rem;border-left:3px solid var(--accent-soft);color:var(--soft)}
+img{max-width:100%}
+table{border-collapse:collapse}th,td{border:1px solid var(--line);padding:.3rem .6rem}
+.links{margin-top:2.4rem;padding-top:1.1rem;border-top:1px solid var(--line)}
+.links h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--soft);margin:0 0 .6rem}
+.links ul{list-style:none;margin:0;padding:0}.links li{margin-bottom:.4rem}
+.links a{color:var(--accent);text-decoration:none;font-size:.95rem}.links a:hover{text-decoration:underline}
+.tools,.foot{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.tools{margin-bottom:1.6rem}.tools .sp{flex:1}.cnt{font-size:.8rem;color:var(--soft)}
+.foot{justify-content:space-between;margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+.btn{font-size:.8rem;letter-spacing:.05em;padding:.6rem 1.1rem;border-radius:4px;border:1px solid var(--accent);background:var(--raised);color:var(--accent)}
+.btn:hover:not(:disabled){background:var(--accent-soft)}
+.btn.main{background:var(--accent);color:#fff}.btn.main:hover:not(:disabled){opacity:.88}
+.btn:disabled{opacity:.35;cursor:default}
+.raw{white-space:pre-wrap}
+footer{text-align:center;padding:1.2rem 1.5rem 2.4rem;font-size:.8rem;color:var(--soft)}
+footer form{display:flex;gap:.5rem;max-width:520px;margin:0 auto .8rem}
+footer input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:4px;padding:.5rem .7rem;background:#fff}
+footer .link{background:none;border:0;color:var(--soft);text-decoration:underline;font-size:.8rem}
+</style>
+</head>
+<body>
+<header class="site"><h1>Leçons</h1><p class="sub" id="sub">Chargement…</p></header>
+<main id="app" aria-live="polite"><div class="status">Chargement des leçons…</div></main>
+<footer>
+  <form id="form"><input type="text" id="src" value="data/" aria-label="Lien du dossier des leçons" spellcheck="false"><button class="btn">Charger ce dossier</button></form>
+  <button class="link" id="pick" type="button">Ou choisir un dossier sur cet ordinateur</button>
+  <input type="file" id="dir" webkitdirectory multiple hidden>
+</footer>
+<script>
+const EXT='md'; // extension des fichiers de leçon : 1.md, 2.md, 3.md…
+const $=s=>document.querySelector(s);
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const attr=s=>esc(s).replace(/"/g,'&quot;');
+const safe=u=>/^\s*(javascript|vbscript):/i.test(u)?'#':u;
+
+/* ---------- Markdown léger ---------- */
+function inline(s){
+  s=esc(s);const c=[];
+  s=s.replace(/`([^`]+)`/g,(m,x)=>{c.push(x);return '\0'+(c.length-1)+'\0'});
+  s=s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,(m,a,u)=>`<img alt="${a}" src="${safe(u)}">`)
+   .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,(m,t,u)=>`<a href="${safe(u)}" target="_blank" rel="noopener">${t}</a>`)
+   .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(^|[^*])\*([^*]+)\*/g,'$1<em>$2</em>').replace(/~~(.+?)~~/g,'<del>$1</del>');
+  return s.replace(/\0(\d+)\0/g,(m,i)=>'<code>'+c[i]+'</code>');
+}
+function md(src){
+  const L=src.replace(/\r/g,'').split('\n');let h='',i=0,m;const li=/^\s*([-*]|\d+\.)\s+/;
+  while(i<L.length){const l=L[i];
+    if(/^```/.test(l)){const b=[];i++;while(i<L.length&&!/^```/.test(L[i]))b.push(L[i++]);i++;h+='<pre><code>'+esc(b.join('\n'))+'</code></pre>';continue}
+    if(m=l.match(/^(#{1,6})\s+(.*)/)){const n=Math.max(3,m[1].length);h+=`<h${n}>${inline(m[2])}</h${n}>`;i++;continue}
+    if(/^(-{3,}|\*{3,})\s*$/.test(l)){h+='<hr>';i++;continue}
+    if(/^>/.test(l)){const b=[];while(i<L.length&&/^>/.test(L[i]))b.push(L[i++].replace(/^>\s?/,''));h+='<blockquote>'+md(b.join('\n'))+'</blockquote>';continue}
+    if(li.test(l)){const o=/^\s*\d+\./.test(l),b=[];while(i<L.length&&li.test(L[i]))b.push(L[i++].replace(li,''));h+=(o?'<ol>':'<ul>')+b.map(x=>'<li>'+inline(x)+'</li>').join('')+(o?'</ol>':'</ul>');continue}
+    if(l.includes('|')&&/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(L[i+1]||'')){
+      const cells=r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+      let t='<table><thead><tr>'+cells(l).map(c=>'<th>'+inline(c)+'</th>').join('')+'</tr></thead><tbody>';i+=2;
+      while(i<L.length&&L[i].trim()&&L[i].includes('|'))t+='<tr>'+cells(L[i++]).map(c=>'<td>'+inline(c)+'</td>').join('')+'</tr>';
+      h+=t+'</tbody></table>';continue}
+    if(!l.trim()){i++;continue}
+    const b=[L[i++]];while(i<L.length&&L[i].trim()&&!/^(#{1,6}\s|```|>)/.test(L[i])&&!li.test(L[i]))b.push(L[i++]);
+    h+='<p>'+b.map(inline).join('<br>')+'</p>';}
+  return h;
+}
+
+/* ---------- Lecture d'un fichier : [meta]/[block]/[link], sinon Markdown libre ---------- */
+function parse(raw){
+  if(!/^\s*\[meta\]/m.test(raw)){
+    const t=(raw.match(/^#\s+(.+)$/m)||[])[1]||'';
+    return {meta:{title:t},blocks:[{title:'',content:raw.replace(/^#\s+.+\n?/m,'')}],links:[]}}
+  const a={meta:{},blocks:[],links:[]};let mode,b;
+  for(const line of raw.replace(/\r/g,'').split('\n')){const t=line.trim();
+    if(t==='[meta]'){mode='m';continue}
+    if(t==='[block]'){mode='b';b={title:null,content:''};a.blocks.push(b);continue}
+    if(t==='[link]'){mode='l';continue}
+    if(mode==='m'){const i=line.indexOf('=');if(i>-1)a.meta[line.slice(0,i).trim()]=line.slice(i+1).trim()}
+    else if(mode==='b'){if(b.title===null){if(t)b.title=t}else b.content+=line+'\n'}
+    else if(mode==='l'&&t){const i=t.indexOf('|');if(i>-1)a.links.push({name:t.slice(0,i).trim(),url:t.slice(i+1).trim()})}}
+  return a}
+
+/* ---------- Chargement : 1.md, 2.md, … jusqu'au premier fichier manquant ---------- */
+let raws=[],items=[],raw=false;
+async function fetchAll(base){
+  if(base&&!base.endsWith('/'))base+='/';
+  const out=[];
+  for(let n=1;n<=999;n++){
+    $('#app').innerHTML=`<div class="status">Chargement des leçons… (${n})</div>`;
+    let r;try{r=await fetch(base+n+'.'+EXT,{cache:'no-store'})}catch(e){if(n===1)throw e;break}
+    if(!r.ok||(r.headers.get('content-type')||'').includes('text/html'))break;
+    out.push(await r.text());}
+  return out}
+function setLessons(texts){
+  raws=texts;
+  items=texts.map((t,i)=>{const p=parse(t);return {n:i+1,title:p.meta.title||'Leçon '+(i+1),meta:[p.meta.subject,p.meta.author,p.meta.date].filter(Boolean)}});
+  route()}
+async function loadUrl(base){
+  try{const t=await fetchAll(base);
+    if(!t.length){empty('<strong>Aucune leçon trouvée.</strong><br>Le fichier <code>'+esc(base.replace(/\/?$/,'/'))+'1.'+EXT+'</code> n’existe pas.');return}
+    setLessons(t)
+  }catch(e){empty('<strong>Impossible de lire le dossier.</strong><br>Si tu as ouvert cette page directement depuis ton ordinateur, le navigateur bloque la lecture : héberge le site (GitHub Pages, Netlify…) ou utilise « choisir un dossier sur cet ordinateur ».')}}
+async function loadFiles(files){
+  const by={};for(const f of files){const m=f.name.match(/^(\d+)\.(md|mb|txt)$/i);if(m)by[+m[1]]=f}
+  const t=[];for(let n=1;by[n];n++)t.push(await by[n].text());
+  if(!t.length)return empty('<strong>Aucune leçon trouvée.</strong><br>Le dossier doit contenir <code>1.'+EXT+'</code>, <code>2.'+EXT+'</code>…');
+  setLessons(t)}
+function empty(h){$('#sub').textContent='';$('#app').innerHTML='<div class="status">'+h+'</div>'}
+
+/* ---------- Affichage ---------- */
+const metaLine=a=>a.filter(Boolean).map(esc).join(' · ');
+function drawList(){
+  $('#sub').textContent=items.length+(items.length>1?' leçons':' leçon');document.title='Leçons';
+  $('#app').innerHTML='<ol class="list">'+items.map(a=>`<li><a href="#lecon-${a.n}"><span class="n">${a.n}</span><span><div class="t">${esc(a.title)}</div><div class="ameta">${metaLine(a.meta)}</div></span></a></li>`).join('')+'</ol>'}
+function drawLesson(n){
+  if(!raws[n-1]){$('#app').innerHTML='<a class="back" href="#">&larr; Retour aux leçons</a><div class="status">Cette leçon est introuvable.</div>';return}
+  const a=parse(raws[n-1]),title=a.meta.title||'Leçon '+n;
+  $('#sub').textContent=title;document.title=title+' – Leçons';
+  const body=raw?`<pre class="raw"><code>${esc(raws[n-1])}</code></pre>`:
+    a.blocks.map(b=>`<div class="block">${b.title?`<h2>${esc(b.title)}</h2>`:''}${md(b.content)}</div>`).join('')+
+    (a.links.length?`<div class="links"><h3>Liens</h3><ul>${a.links.map(l=>`<li><a href="${attr(safe(l.url))}" target="_blank" rel="noopener">${esc(l.name||l.url)}</a></li>`).join('')}</ul></div>`:'');
+  $('#app').innerHTML=`<a class="back" href="#">&larr; Retour aux leçons</a>
+    <div class="head"><h1>${esc(title)}</h1><div class="ameta">${metaLine([a.meta.subject,a.meta.author,a.meta.date])}</div></div>
+    <div class="tools"><button class="btn" id="raw">${raw?'Voir la leçon':'Voir le fichier .'+EXT}</button><button class="btn" id="dl">Télécharger ${n}.${EXT}</button><span class="sp"></span><span class="cnt">Leçon ${n} sur ${raws.length}</span></div>
+    ${body}
+    <div class="foot"><a class="btn" id="pv" href="#lecon-${n-1}" ${n<=1?'hidden':''}>&larr; Précédente</a><span></span><a class="btn main" id="nx" href="#lecon-${n+1}" ${n>=raws.length?'hidden':''}>Suivante &rarr;</a></div>`;
+  scrollTo(0,0)}
+function route(){
+  if(!raws.length)return;
+  const m=location.hash.match(/^#lecon-(\d+)$/);
+  if(m)drawLesson(+m[1]);else{raw=false;drawList()}}
+addEventListener('hashchange',()=>{raw=false;route()});
+$('#app').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.id==='raw'){raw=!raw;route()}
+  else if(b.id==='dl'){const n=+location.hash.match(/\d+/)[0],a=document.createElement('a');a.href=URL.createObjectURL(new Blob([raws[n-1]],{type:'text/plain'}));a.download=n+'.'+EXT;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}});
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.ctrlKey||e.metaKey||e.altKey)return;
+  const m=location.hash.match(/^#lecon-(\d+)$/);if(!m)return;const n=+m[1];
+  if(e.key==='ArrowLeft'&&n>1)location.hash='#lecon-'+(n-1);
+  if(e.key==='ArrowRight'&&n<raws.length)location.hash='#lecon-'+(n+1)});
+$('#form').onsubmit=e=>{e.preventDefault();loadUrl($('#src').value.trim())};
+$('#pick').onclick=()=>$('#dir').click();
+$('#dir').onchange=e=>{loadFiles([...e.target.files]);e.target.value=''};
+
+/* Le lien du dossier peut aussi venir de l'adresse : lecteur.html?src=https://exemple.fr/cours/data/ */
+const q=new URLSearchParams(location.search).get('src');if(q)$('#src').value=q;
+loadUrl($('#src').value.trim());
+</script>
+</body>
+</html>
