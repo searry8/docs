@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Éditeur de leçons</title>
+<style>
+:root{--paper:#f6f4ef;--raised:#fff;--ink:#1e2422;--soft:#5b6460;--accent:#2f5d55;--accent-soft:#dfe9e6;--line:#d8d4c8;--code:#eceae2;--danger:#a23b3b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 Georgia,"Iowan Old Style",serif}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ui{font-family:"Helvetica Neue",Arial,sans-serif}
+header.site{padding:1.4rem 1.5rem;text-align:center;border-bottom:1px solid var(--line);display:flex;justify-content:center;align-items:center;gap:1rem;flex-wrap:wrap}
+header.site h1{margin:0;font-size:1.6rem;font-weight:600}
+.pill{font:.75rem "Helvetica Neue",Arial,sans-serif;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:.15rem .7rem}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr) minmax(0,1fr);gap:1.5rem;padding:1.5rem;max-width:1600px;margin:0 auto;align-items:start}
+.toc-pane,.preview-pane{position:sticky;top:1rem;max-height:calc(100vh - 2rem);overflow:auto}
+h4,legend{font:600 .8rem "Helvetica Neue",Arial,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin:0 0 .6rem}
+ol.lessons,ul.toc{list-style:none;margin:0 0 1rem;padding:0}
+.lessons li{display:flex;align-items:center;border-radius:4px}
+.lessons li.on{background:var(--accent-soft)}
+.lessons .pick{flex:1;min-width:0;display:flex;gap:.6rem;align-items:baseline;background:none;border:0;padding:.45rem .5rem;text-align:left}
+.lessons b{min-width:1.3em}
+.lessons span.t,.toc a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mv button{background:none;border:0;color:var(--soft);padding:.2rem .3rem}
+.mv button:hover{color:var(--accent)}
+.toc a{display:block;color:var(--soft);text-decoration:none;font:.88rem "Helvetica Neue",Arial,sans-serif;padding:.25rem .5rem;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--accent);border-color:var(--accent)}
+.stats{font:.78rem "Helvetica Neue",Arial,sans-serif;color:var(--soft);margin-top:.8rem}
+.btn{font:.8rem "Helvetica Neue",Arial,sans-serif;letter-spacing:.04em;padding:.55rem 1rem;border-radius:4px;border:1px solid var(--accent);background:var(--raised);color:var(--accent)}
+.btn:hover{background:var(--accent-soft)}
+.btn.main{background:var(--accent);color:#fff}
+.btn.main:hover{opacity:.88}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.row{display:flex;flex-wrap:wrap;gap:.5rem;margin:.8rem 0}
+.editor-pane>details,fieldset{background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem;margin:0 0 1rem}
+summary{cursor:pointer;font:600 .85rem "Helvetica Neue",Arial,sans-serif;color:var(--accent)}
+label{display:block;font:.8rem "Helvetica Neue",Arial,sans-serif;color:var(--soft);margin:.7rem 0 .2rem}
+input[type=text],textarea{width:100%;border:1px solid var(--line);border-radius:4px;padding:.5rem .65rem;background:#fff}
+textarea{resize:none;line-height:1.55;overflow:hidden}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 .8rem}
+.blk{border:1px solid var(--line);border-radius:6px;margin-bottom:.7rem;background:var(--paper)}
+.blk.over{outline:2px dashed var(--accent)}
+.bh{display:flex;justify-content:space-between;align-items:center;padding:.4rem .6rem;gap:.5rem}
+.bh .l{display:flex;gap:.6rem;align-items:center;min-width:0;font:.85rem "Helvetica Neue",Arial,sans-serif}
+.grip{cursor:grab;color:var(--soft);user-select:none}
+.bh .pv{color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ib{background:none;border:1px solid transparent;border-radius:4px;padding:.15rem .45rem;color:var(--soft)}
+.ib:hover{border-color:var(--line);color:var(--accent)}
+.ib.del:hover{color:var(--danger)}
+.bb{padding:0 .7rem .7rem}
+.bb.off{display:none}
+.tb{display:flex;gap:.3rem;margin:.5rem 0 .3rem}
+.tb button{min-width:2rem;border:1px solid var(--line);background:#fff;border-radius:4px;padding:.1rem .5rem;font:.85rem "Helvetica Neue",Arial,sans-serif}
+.tb button:hover{background:var(--accent-soft)}
+.wc{font:.75rem "Helvetica Neue",Arial,sans-serif;color:var(--soft)}
+.lk{display:grid;grid-template-columns:1fr 1.4fr auto;gap:.5rem;margin-bottom:.5rem}
+.preview-inner{background:var(--raised);border:1px solid var(--line);border-radius:6px;padding:1.6rem 1.8rem}
+.plabel{display:flex;justify-content:space-between;font:.75rem "Helvetica Neue",Arial,sans-serif;text-transform:uppercase;letter-spacing:.1em;color:var(--soft);margin-bottom:1rem}
+.rt h1{font-size:1.9rem;line-height:1.2;margin:0 0 .5rem}
+.rt .ameta{font:.8rem "Helvetica Neue",Arial,sans-serif;color:var(--soft);text-transform:uppercase;letter-spacing:.08em}
+.rt .head{margin-bottom:1.6rem;padding-bottom:1rem;border-bottom:2px solid var(--ink)}
+.rt .block{margin-bottom:1.8rem}
+.rt h2{font:600 1.05rem "Helvetica Neue",Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);border-left:3px solid var(--accent);padding-left:.6rem;margin:0 0 .8rem}
+.rt h3{font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem}
+.rt p{margin:0 0 1rem}
+.rt code{background:var(--code);padding:.1rem .35rem;border-radius:3px;font:.88em ui-monospace,Consolas,monospace}
+.rt pre{background:var(--code);padding:.9rem;border-radius:5px;overflow:auto}
+.rt pre code{padding:0}
+.rt blockquote{margin:1rem 0;padding:.1rem 1rem;border-left:3px solid var(--accent-soft);color:var(--soft)}
+.rt img{max-width:100%}
+.rt table{border-collapse:collapse}.rt th,.rt td{border:1px solid var(--line);padding:.3rem .6rem}
+.rt .links{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-family:"Helvetica Neue",Arial,sans-serif}
+.rt .links ul{list-style:none;padding:0;margin:.4rem 0 0}
+.rt .links a{color:var(--accent);text-decoration:none}
+.rt .links a:hover{text-decoration:underline}
+.raw{display:none;background:var(--code);padding:.9rem;border-radius:5px;font:.8rem/1.5 ui-monospace,Consolas,monospace;white-space:pre-wrap;margin:.6rem 0 0}
+.toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font:.85rem "Helvetica Neue",Arial,sans-serif;padding:.6rem 1.1rem;border-radius:4px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media(max-width:1100px){.layout{grid-template-columns:1fr;padding:1rem}.toc-pane,.preview-pane{position:static;max-height:none}.lessons{max-height:170px;overflow:auto}}
+@media(prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<header class="site"><h1>Éditeur de leçons</h1><span class="pill" id="pill">brouillon</span></header>
+<div class="layout">
+  <div class="toc-pane">
+    <h4>Leçons</h4>
+    <ol class="lessons" id="lessons" aria-label="Liste des leçons"></ol>
+    <div class="row"><button class="btn" id="addL">+ Nouvelle leçon</button></div>
+    <h4>Sommaire</h4>
+    <ul class="toc" id="toc"></ul>
+    <div class="stats" id="stats"></div>
+    <div class="row"><button class="btn main" id="zip">Tout télécharger (dossier data)</button></div>
+  </div>
+
+  <div class="editor-pane">
+    <details>
+      <summary>Importer ou reprendre des leçons</summary>
+      <label for="files">Fichiers .md (un ou plusieurs, ajoutés à la suite)</label>
+      <input type="file" id="files" accept=".md,.mb,.txt" multiple>
+      <label for="web">Ou charger depuis un lien de dossier publié (remplace les leçons actuelles)</label>
+      <div class="row" style="margin:0"><input type="text" id="web" value="data/" style="flex:1" spellcheck="false"><button class="btn" id="btnWeb">Charger</button></div>
+    </details>
+
+    <fieldset>
+      <legend>Informations</legend>
+      <label for="m-title">Titre</label><input type="text" id="m-title">
+      <div class="grid2">
+        <div><label for="m-subject">Matière</label><input type="text" id="m-subject" placeholder="Histoire, maths…"></div>
+        <div><label for="m-author">Auteur</label><input type="text" id="m-author"></div>
+      </div>
+      <label for="m-date">Date</label><input type="text" id="m-date">
+    </fieldset>
+
+    <fieldset>
+      <legend>Blocs</legend>
+      <div id="blocks"></div>
+      <button class="btn" id="addB">+ Ajouter un bloc</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Liens</legend>
+      <div id="links"></div>
+      <button class="btn" id="addK">+ Ajouter un lien</button>
+    </fieldset>
+
+    <div class="row">
+      <button class="btn main" id="dl">Télécharger</button>
+      <button class="btn" id="copy">Copier le texte</button>
+      <button class="btn danger" id="reset">Vider cette leçon</button>
+    </div>
+    <p class="wc" id="hint"></p>
+  </div>
+
+  <div class="preview-pane">
+    <div class="preview-inner">
+      <div class="plabel"><span>Aperçu</span><span id="rtime"></span></div>
+      <div class="rt" id="preview"></div>
+      <p><button class="btn" id="rawBtn">Afficher / masquer le fichier brut</button></p>
+      <pre class="raw" id="raw"></pre>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const EXT='md'; // extension des fichiers de leçon
+const $=s=>document.querySelector(s);
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const attr=s=>esc(s).replace(/"/g,'&quot;');
+const safe=u=>/^\s*(javascript|vbscript):/i.test(u)?'#':u;
+const words=s=>(s.match(/\S+/g)||[]).length;
+const today=()=>new Date().toISOString().slice(0,10);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1800)}
+
+/* ---------- Markdown léger (gras, italique, code, listes, citations, liens, images, tableaux) ---------- */
+function inline(s){
+  s=esc(s);const c=[];
+  s=s.replace(/`([^`]+)`/g,(m,x)=>{c.push(x);return '\0'+(c.length-1)+'\0'});
+  s=s.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g,(m,a,u)=>`<img alt="${a}" src="${safe(u)}">`)
+   .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,(m,t,u)=>`<a href="${safe(u)}" target="_blank" rel="noopener">${t}</a>`)
+   .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/(^|[^*])\*([^*]+)\*/g,'$1<em>$2</em>').replace(/~~(.+?)~~/g,'<del>$1</del>');
+  return s.replace(/\0(\d+)\0/g,(m,i)=>'<code>'+c[i]+'</code>');
+}
+function md(src){
+  const L=src.replace(/\r/g,'').split('\n');let h='',i=0,m;const li=/^\s*([-*]|\d+\.)\s+/;
+  while(i<L.length){const l=L[i];
+    if(/^```/.test(l)){const b=[];i++;while(i<L.length&&!/^```/.test(L[i]))b.push(L[i++]);i++;h+='<pre><code>'+esc(b.join('\n'))+'</code></pre>';continue}
+    if(m=l.match(/^(#{1,6})\s+(.*)/)){const n=Math.max(3,m[1].length);h+=`<h${n}>${inline(m[2])}</h${n}>`;i++;continue}
+    if(/^(-{3,}|\*{3,})\s*$/.test(l)){h+='<hr>';i++;continue}
+    if(/^>/.test(l)){const b=[];while(i<L.length&&/^>/.test(L[i]))b.push(L[i++].replace(/^>\s?/,''));h+='<blockquote>'+md(b.join('\n'))+'</blockquote>';continue}
+    if(li.test(l)){const o=/^\s*\d+\./.test(l),b=[];while(i<L.length&&li.test(L[i]))b.push(L[i++].replace(li,''));h+=(o?'<ol>':'<ul>')+b.map(x=>'<li>'+inline(x)+'</li>').join('')+(o?'</ol>':'</ul>');continue}
+    if(l.includes('|')&&/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(L[i+1]||'')){
+      const cells=r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+      let t='<table><thead><tr>'+cells(l).map(c=>'<th>'+inline(c)+'</th>').join('')+'</tr></thead><tbody>';i+=2;
+      while(i<L.length&&L[i].trim()&&L[i].includes('|'))t+='<tr>'+cells(L[i++]).map(c=>'<td>'+inline(c)+'</td>').join('')+'</tr>';
+      h+=t+'</tbody></table>';continue}
+    if(!l.trim()){i++;continue}
+    const b=[L[i++]];while(i<L.length&&L[i].trim()&&!/^(#{1,6}\s|```|>)/.test(L[i])&&!li.test(L[i]))b.push(L[i++]);
+    h+='<p>'+b.map(inline).join('<br>')+'</p>';}
+  return h;
+}
+
+/* ---------- Modèle d'une leçon : infos + blocs + liens ---------- */
+let uid=0;const nid=()=>++uid;
+const newLesson=()=>({meta:{title:'Titre de la leçon',subject:'',author:'',date:today()},blocks:[{id:nid(),title:'Introduction',content:'',collapsed:false}],links:[]});
+let L=[newLesson()],cur=0;
+try{const s=JSON.parse(localStorage.getItem('lecons-v2')||'null');
+  if(s&&Array.isArray(s.L)&&s.L.length){L=s.L;cur=Math.min(s.cur||0,L.length-1);L.forEach(l=>{l.blocks.forEach(b=>b.id=nid());l.links.forEach(k=>k.id=nid())});$('#pill').textContent='brouillon restauré'}}catch(e){}
+let tm;function save(){$('#pill').textContent='modifié';clearTimeout(tm);tm=setTimeout(()=>{try{localStorage.setItem('lecons-v2',JSON.stringify({L,cur}));$('#hint').textContent='Brouillon enregistré à '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+' dans ce navigateur.'}catch(e){$('#hint').textContent='Enregistrement automatique impossible dans ce navigateur : télécharge tes fichiers.'}},400)}
+
+/* Fichier : [meta] / [block] / [link]. Sans [meta], le fichier est lu comme du Markdown libre. */
+const toText=l=>{
+  let o=`[meta]\ntitle=${l.meta.title}\nsubject=${l.meta.subject}\nauthor=${l.meta.author}\ndate=${l.meta.date}\n`;
+  l.blocks.forEach(b=>o+=`[block]\n${b.title.trim()||'Sans titre'}\n${b.content}\n`);
+  const ks=l.links.filter(k=>k.name||k.url);if(ks.length)o+='[link]\n'+ks.map(k=>`${k.name}|${k.url}`).join('\n')+'\n';
+  return o.trim()+'\n'};
+function parse(raw){
+  if(!/^\s*\[meta\]/m.test(raw)){
+    const t=(raw.match(/^#\s+(.+)$/m)||[])[1]||'Sans titre';
+    return {meta:{title:t,subject:'',author:'',date:today()},blocks:[{id:nid(),title:'Contenu',content:raw.replace(/^#\s+.+\n?/m,'').trim(),collapsed:false}],links:[]}}
+  const l={meta:{title:'',subject:'',author:'',date:''},blocks:[],links:[]};let mode,b;
+  for(const line of raw.replace(/\r/g,'').split('\n')){const t=line.trim();
+    if(t==='[meta]'){mode='m';continue}
+    if(t==='[block]'){mode='b';b={id:nid(),title:null,content:'',collapsed:false};l.blocks.push(b);continue}
+    if(t==='[link]'){mode='l';continue}
+    if(mode==='m'){const i=line.indexOf('=');if(i>-1)l.meta[line.slice(0,i).trim()]=line.slice(i+1).trim()}
+    else if(mode==='b'){if(b.title===null){if(t)b.title=t}else b.content+=line+'\n'}
+    else if(mode==='l'&&t){const i=t.indexOf('|');if(i>-1)l.links.push({id:nid(),name:t.slice(0,i).trim(),url:t.slice(i+1).trim()})}}
+  l.blocks.forEach(x=>{x.title=x.title||'';x.content=x.content.replace(/^\n+|\s+$/g,'')});
+  return l}
+function lessonHtml(l){
+  const meta=[l.meta.subject,l.meta.author,l.meta.date].filter(Boolean).map(esc).join(' · ');
+  return `<div class="head"><h1>${esc(l.meta.title)||'Sans titre'}</h1><div class="ameta">${meta}</div></div>`+
+    l.blocks.map(b=>`<div class="block">${b.title?`<h2>${esc(b.title)}</h2>`:''}${md(b.content)}</div>`).join('')+
+    (l.links.some(k=>k.name||k.url)?`<div class="links"><h4>Liens</h4><ul>${l.links.filter(k=>k.url).map(k=>`<li><a href="${attr(safe(k.url))}" target="_blank" rel="noopener">${esc(k.name||k.url)}</a></li>`).join('')}</ul></div>`:'')}
+const titleOf=l=>l.meta.title||'Sans titre';
+
+/* ---------- Affichage ---------- */
+const cl=()=>L[cur];
+function drawLessons(){
+  $('#lessons').innerHTML=L.map((l,i)=>`<li class="${i===cur?'on':''}"><button class="pick" data-a="go" data-i="${i}"><b>${i+1}</b><span class="t">${esc(titleOf(l))}</span></button><span class="mv"><button data-a="up" data-i="${i}" aria-label="Monter la leçon ${i+1}">▲</button><button data-a="down" data-i="${i}" aria-label="Descendre la leçon ${i+1}">▼</button><button data-a="del" data-i="${i}" aria-label="Supprimer la leçon ${i+1}">✕</button></span></li>`).join('');
+  $('#dl').textContent='Télécharger '+(cur+1)+'.'+EXT;
+}
+function drawToc(){
+  $('#toc').innerHTML=cl().blocks.map(b=>`<li><a href="#b${b.id}" data-b="${b.id}">${esc(b.title||'(sans titre)')}</a></li>`).join('');
+  const w=cl().blocks.reduce((n,b)=>n+words(b.content),0);
+  $('#stats').textContent=`${cl().blocks.length} bloc${cl().blocks.length>1?'s':''} · ${w} mots`;
+  $('#rtime').textContent='≈ '+Math.max(1,Math.round(w/200))+' min de lecture';
+}
+function drawPreview(){$('#preview').innerHTML=lessonHtml(cl());$('#raw').textContent=toText(cl())}
+function grow(t){t.style.height='auto';t.style.height=(t.scrollHeight+2)+'px'}
+function drawBlocks(){
+  $('#blocks').innerHTML=cl().blocks.map((b,i)=>`<div class="blk" id="b${b.id}" data-id="${b.id}">
+    <div class="bh"><div class="l"><span class="grip" title="Glisser pour déplacer" aria-hidden="true">⋮⋮</span><b>Bloc ${i+1}</b><span class="pv">${esc(b.title||'(sans titre)')}</span></div>
+    <div><button class="ib" data-a="bup" aria-label="Monter le bloc">↑</button><button class="ib" data-a="bdown" aria-label="Descendre le bloc">↓</button><button class="ib" data-a="bdup" aria-label="Dupliquer le bloc">⧉</button><button class="ib" data-a="bcol" aria-label="Replier ou déplier">${b.collapsed?'▸':'▾'}</button><button class="ib del" data-a="bdel" aria-label="Supprimer le bloc">✕</button></div></div>
+    <div class="bb ${b.collapsed?'off':''}">
+      <input type="text" data-f="title" value="${attr(b.title)}" placeholder="Titre du bloc" aria-label="Titre du bloc">
+      <div class="tb"><button data-fmt="**" title="Gras (Ctrl+B)"><b>G</b></button><button data-fmt="*" title="Italique (Ctrl+I)"><i>I</i></button><button data-fmt="\`" title="Code (Ctrl+E)">&lt;/&gt;</button><button data-fmt="- " title="Liste">Liste</button></div>
+      <textarea data-f="content" rows="3" aria-label="Contenu du bloc" placeholder="Écris ici. **gras**, *italique*, \`code\`, « - » pour une liste.">${esc(b.content)}</textarea>
+      <div class="wc">${words(b.content)} mots</div></div></div>`).join('');
+  $('#blocks').querySelectorAll('textarea').forEach(grow);
+}
+function drawLinks(){
+  $('#links').innerHTML=cl().links.map(k=>`<div class="lk" data-id="${k.id}"><input type="text" data-k="name" value="${attr(k.name)}" placeholder="Nom du lien" aria-label="Nom du lien"><input type="text" data-k="url" value="${attr(k.url)}" placeholder="https://…" aria-label="Adresse du lien"><button class="ib del" data-a="kdel" aria-label="Supprimer le lien">✕</button></div>`).join('');
+}
+function drawMeta(){for(const k of ['title','subject','author','date'])$('#m-'+k).value=cl().meta[k]||''}
+function drawAll(){drawLessons();drawMeta();drawBlocks();drawLinks();drawToc();drawPreview()}
+
+/* ---------- Événements ---------- */
+for(const k of ['title','subject','author','date'])$('#m-'+k).addEventListener('input',e=>{cl().meta[k]=e.target.value;if(k==='title')drawLessons();drawPreview();save()});
+const bl=id=>cl().blocks.find(b=>b.id===+id);
+const blocksEl=$('#blocks');
+blocksEl.addEventListener('input',e=>{
+  const t=e.target,box=t.closest('.blk');if(!box||!t.dataset.f)return;const b=bl(box.dataset.id);b[t.dataset.f]=t.value;
+  if(t.dataset.f==='title'){box.querySelector('.pv').textContent=t.value||'(sans titre)';drawToc()}else{grow(t);box.querySelector('.wc').textContent=words(t.value)+' mots';drawToc()}
+  drawPreview();save()});
+function fmt(ta,m){
+  const s=ta.selectionStart,e=ta.selectionEnd;
+  if(m==='- '){const ls=ta.value.lastIndexOf('\n',s-1)+1;ta.setRangeText('- ',ls,ls,'end')}
+  else{const sel=ta.value.slice(s,e)||'texte';ta.setRangeText(m+sel+m,s,e,'select')}
+  ta.dispatchEvent(new Event('input',{bubbles:true}));ta.focus()}
+blocksEl.addEventListener('keydown',e=>{
+  if(!(e.ctrlKey||e.metaKey)||e.target.tagName!=='TEXTAREA')return;
+  const m={b:'**',i:'*',e:'`'}[e.key.toLowerCase()];if(m){e.preventDefault();fmt(e.target,m)}});
+const mvB=(a,i,j)=>{if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]};
+blocksEl.addEventListener('click',e=>{
+  const x=e.target.closest('button');if(!x)return;const box=x.closest('.blk');
+  if(x.dataset.fmt){fmt(box.querySelector('textarea'),x.dataset.fmt);return}
+  const a=x.dataset.a;if(!a)return;const bs=cl().blocks,i=bs.findIndex(b=>b.id===+box.dataset.id);
+  if(a==='bup')mvB(bs,i,i-1);else if(a==='bdown')mvB(bs,i,i+1);
+  else if(a==='bdup')bs.splice(i+1,0,{...bs[i],id:nid(),title:bs[i].title+' (copie)'});
+  else if(a==='bcol')bs[i].collapsed=!bs[i].collapsed;
+  else if(a==='bdel'){if(!confirm('Supprimer ce bloc ?'))return;bs.splice(i,1)}
+  drawBlocks();drawToc();drawPreview();save()});
+/* glisser-déposer des blocs par la poignée */
+let dragId=null;
+blocksEl.addEventListener('mousedown',e=>{const g=e.target.closest('.grip');if(g)g.closest('.blk').draggable=true});
+blocksEl.addEventListener('dragstart',e=>{dragId=+e.target.dataset.id;e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','b')});
+blocksEl.addEventListener('dragend',e=>{if(e.target.draggable)e.target.draggable=false;blocksEl.querySelectorAll('.over').forEach(x=>x.classList.remove('over'))});
+blocksEl.addEventListener('dragover',e=>{const b=e.target.closest('.blk');if(b&&dragId){e.preventDefault();blocksEl.querySelectorAll('.over').forEach(x=>x.classList.remove('over'));b.classList.add('over')}});
+blocksEl.addEventListener('drop',e=>{
+  const t=e.target.closest('.blk');if(!t||!dragId)return;e.preventDefault();
+  const bs=cl().blocks,from=bs.findIndex(b=>b.id===dragId),to=bs.findIndex(b=>b.id===+t.dataset.id);
+  if(from>-1&&to>-1&&from!==to){bs.splice(to,0,bs.splice(from,1)[0]);drawBlocks();drawToc();drawPreview();save()}dragId=null});
+$('#toc').addEventListener('click',e=>{const a=e.target.closest('[data-b]');if(!a)return;e.preventDefault();const b=bl(a.dataset.b);if(b&&b.collapsed){b.collapsed=false;drawBlocks()}$('#b'+a.dataset.b).scrollIntoView({behavior:'smooth',block:'start'})});
+$('#addB').onclick=()=>{cl().blocks.push({id:nid(),title:'',content:'',collapsed:false});drawBlocks();drawToc();drawPreview();save();const t=blocksEl.querySelector('.blk:last-child input');t&&t.focus()};
+$('#addK').onclick=()=>{cl().links.push({id:nid(),name:'',url:''});drawLinks();save();const t=$('#links .lk:last-child input');t&&t.focus()};
+$('#links').addEventListener('input',e=>{const r=e.target.closest('.lk');if(!r||!e.target.dataset.k)return;cl().links.find(k=>k.id===+r.dataset.id)[e.target.dataset.k]=e.target.value;drawPreview();save()});
+$('#links').addEventListener('click',e=>{const x=e.target.closest('[data-a="kdel"]');if(!x)return;const id=+x.closest('.lk').dataset.id;cl().links=cl().links.filter(k=>k.id!==id);drawLinks();drawPreview();save()});
+
+/* liste des leçons */
+$('#lessons').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i,a=b.dataset.a;
+  if(a==='go')cur=i;
+  else if(a==='up'&&i>0){mvB(L,i,i-1);if(cur===i)cur--;else if(cur===i-1)cur++}
+  else if(a==='down'&&i<L.length-1){mvB(L,i,i+1);if(cur===i)cur++;else if(cur===i+1)cur--}
+  else if(a==='del'){if(!confirm('Supprimer la leçon '+(i+1)+' ? Les suivantes seront renumérotées.'))return;L.splice(i,1);if(!L.length)L=[newLesson()];cur=Math.min(cur>i?cur-1:cur,L.length-1)}
+  drawAll();save()});
+$('#addL').onclick=()=>{L.push(newLesson());cur=L.length-1;drawAll();save();$('#m-title').select()};
+$('#reset').onclick=()=>{if(!confirm('Vider cette leçon ?'))return;L[cur]=newLesson();drawAll();save()};
+$('#rawBtn').onclick=()=>{const r=$('#raw');r.style.display=r.style.display==='block'?'none':'block'};
+
+/* import / export */
+const download=(blob,name)=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('#dl').onclick=()=>download(new Blob([toText(cl())],{type:'text/plain'}),(cur+1)+'.'+EXT);
+$('#copy').onclick=async()=>{try{await navigator.clipboard.writeText(toText(cl()));toast('Copié !')}catch(e){toast('Copie impossible : utilise « Afficher le fichier brut ».')}};
+$('#files').onchange=async e=>{
+  const fs=[...e.target.files].sort((a,b)=>a.name.localeCompare(b.name,'fr',{numeric:true}));
+  const got=await Promise.all(fs.map(async f=>parse(await f.text())));
+  if(!got.length)return;
+  const blank=L.length===1&&!L[0].blocks.some(b=>b.content.trim());
+  L=blank?got:L.concat(got);cur=blank?0:L.length-got.length;e.target.value='';drawAll();save();toast(got.length+' leçon(s) importée(s)')};
+$('#btnWeb').onclick=async()=>{
+  let base=$('#web').value.trim();if(base&&!base.endsWith('/'))base+='/';
+  const got=[];
+  try{for(let n=1;n<=999;n++){const r=await fetch(base+n+'.'+EXT,{cache:'no-store'});if(!r.ok||(r.headers.get('content-type')||'').includes('text/html'))break;got.push(parse(await r.text()))}}catch(e){}
+  if(!got.length)return toast('Aucune leçon trouvée à ce lien (ou accès bloqué par le navigateur).');
+  if(!confirm(got.length+' leçon(s) trouvée(s). Remplacer les leçons actuelles ?'))return;
+  L=got;cur=0;drawAll();save()};
+function crc(b){const t=crc.t||(crc.t=Array.from({length:256},(_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;return c>>>0}));let r=-1;for(const x of b)r=t[(r^x)&255]^(r>>>8);return(r^-1)>>>0}
+function zip(files){
+  const enc=new TextEncoder(),parts=[],cen=[];let off=0,cs=0;
+  for(const f of files){const n=enc.encode(f.name),d=enc.encode(f.text),c=crc(d),s=d.length;
+    const lh=new DataView(new ArrayBuffer(30));lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(12,0x21,true);lh.setUint32(14,c,true);lh.setUint32(18,s,true);lh.setUint32(22,s,true);lh.setUint16(26,n.length,true);
+    parts.push(new Uint8Array(lh.buffer),n,d);
+    const ch=new DataView(new ArrayBuffer(46));ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(14,0x21,true);ch.setUint32(16,c,true);ch.setUint32(20,s,true);ch.setUint32(24,s,true);ch.setUint16(28,n.length,true);ch.setUint32(42,off,true);
+    cen.push(new Uint8Array(ch.buffer),n);off+=30+n.length+s;cs+=46+n.length}
+  const end=new DataView(new ArrayBuffer(22));end.setUint32(0,0x06054b50,true);end.setUint16(8,files.length,true);end.setUint16(10,files.length,true);end.setUint32(12,cs,true);end.setUint32(16,off,true);
+  return new Blob([...parts,...cen,new Uint8Array(end.buffer)],{type:'application/zip'})}
+$('#zip').onclick=()=>download(zip(L.map((l,i)=>({name:'data/'+(i+1)+'.'+EXT,text:toText(l)}))),'data.zip');
+
+drawAll();
+</script>
+</body>
+</html>
